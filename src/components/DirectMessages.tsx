@@ -1,5 +1,11 @@
+import InterlocutorList from './InterlocutorList';
+
 const DirectMessages = () => {
-  return <></>;
+  return (
+    <div>
+      <InterlocutorList />
+    </div>
+  );
 };
 
 export default DirectMessages;

@@ -2,7 +2,7 @@ import Home from './Home';
 
 function App() {
   return (
-    <div>
+    <div className="h-screen">
       <Home />
     </div>
   );

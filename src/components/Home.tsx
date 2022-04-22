@@ -3,7 +3,7 @@ import ServerList from './ServerList';
 
 const Home = () => {
   return (
-    <div>
+    <div className="h-full">
       <ServerList />
       <DirectMessages />
     </div>
