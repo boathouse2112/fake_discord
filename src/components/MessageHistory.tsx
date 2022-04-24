@@ -1,44 +1,16 @@
-import avatar from './../resources/user_avatar.png';
+import { v4 as uuid } from 'uuid';
+import MessageGroup, { MessageGroupData } from './MessageGroup';
 
-const MessageHistory = () => {
+const MessageHistory = (props: { data: MessageGroupData[] }) => {
+  const drawMessageGroups = () => {
+    return props.data.map((messageGroupData) => (
+      <MessageGroup key={uuid()} {...messageGroupData} />
+    ));
+  };
+
   return (
     <div className="flex-grow flex flex-col bg-neutral-600">
-      <div className="p-6 flex flex-row gap-2">
-        <div className="w-10 py-2">
-          <img src={avatar} alt="user avatar" className="rounded-full"></img>
-        </div>
-        <div className="flex flex-col text-white">
-          <div className="flex flex-row gap-2">
-            <h1>James</h1>
-            <h2>Yesterday at 2:00 PM</h2>
-          </div>
-          <div>
-            <p>This is a message.</p>
-            <p>
-              A VERY LONG
-              MESSAGE-------------------------------------------------------------------
-            </p>
-          </div>
-        </div>
-      </div>
-      <div className="p-6 flex flex-row gap-2">
-        <div className="w-10 py-2">
-          <img src={avatar} alt="user avatar" className="rounded-full"></img>
-        </div>
-        <div className="flex flex-col text-white">
-          <div className="flex flex-row gap-2">
-            <h1>James</h1>
-            <h2>Yesterday at 2:00 PM</h2>
-          </div>
-          <div>
-            <p>This is a message.</p>
-            <p>
-              A VERY LONG
-              MESSAGE-------------------------------------------------------------------
-            </p>
-          </div>
-        </div>
-      </div>
+      {drawMessageGroups()}
     </div>
   );
 };
