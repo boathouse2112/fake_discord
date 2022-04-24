@@ -1,19 +1,13 @@
-type TextContentData = {
-  type: 'text';
-  text: string;
-};
+import { MessageContentData } from '../MessageTypes';
 
-// Tagged union, can switch on `type` field.
-type MessageContentData = TextContentData;
-
-type MessageData = {
+type MessageProps = {
   time: string;
   content: MessageContentData;
 };
 
 // Display a message - it's time and contents
 // When I have more contents types, this will insert the correct type.
-const Message = (props: MessageData) => {
+const Message = (props: MessageProps) => {
   const drawContent = () => {
     switch (props.content.type) {
       case 'text':
@@ -24,6 +18,6 @@ const Message = (props: MessageData) => {
   return <div>{drawContent()}</div>;
 };
 
-export type { MessageData };
+export type { MessageProps };
 
 export default Message;
