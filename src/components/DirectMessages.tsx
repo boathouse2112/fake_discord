@@ -1,5 +1,9 @@
 import { useState } from 'react';
-import { ConversationData, MessageData } from '../MessageTypes';
+import {
+  ConversationData,
+  MessageContentData,
+  MessageData,
+} from '../MessageTypes';
 import InterlocutorList from './InterlocutorList';
 import MessageView from './MessageView';
 
@@ -69,15 +73,33 @@ const DUMMY_CONVERSATION: ConversationData = {
 
 // Handles DM state
 // In the future, will sync with Firestore database.
-const DirectMessages = () => {
+const DirectMessages = (props: { user: string }) => {
   const [interlocutors, setInterlocutors] = useState<string[]>([]);
   const [currentConversation, setCurrentConversation] =
     useState<ConversationData>(DUMMY_CONVERSATION);
 
+  // Submits a message from the current user, to the current conversation
+  const submitMessage = (content: MessageContentData) => {
+    const message: MessageData = {
+      author: props.user,
+      time: 'currentTime',
+      content,
+    };
+
+    // Push a message to currentCoversation
+    setCurrentConversation({
+      interlocutor: currentConversation.interlocutor,
+      messages: [...currentConversation.messages, message],
+    });
+  };
+
   return (
     <div className="w-full flex">
       <InterlocutorList />
-      <MessageView conversation={currentConversation} />
+      <MessageView
+        conversation={currentConversation}
+        submitMessage={submitMessage}
+      />
     </div>
   );
 };

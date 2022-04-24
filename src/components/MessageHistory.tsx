@@ -23,9 +23,7 @@ const groupMessages = (messages: MessageData[]): MessageGroupProps[] => {
 
   // Push the current message group to the list, and start a new one.
   const startMessageGroup = (message: MessageData) => {
-    console.log('pushing');
     messageGroups.push(currentMessageGroup);
-    console.log('messageGroups', messageGroups);
     currentMessageGroup = {
       author: message.author,
       time: message.time,
@@ -38,12 +36,9 @@ const groupMessages = (messages: MessageData[]): MessageGroupProps[] => {
     currentMessageGroup.messages.push(message);
   };
 
-  console.log('remaining messages', remainingMessages);
-
   // For each remaining message, if the author is the same as the current message group, update the group.
   // Else, start a new message group.
   remainingMessages.forEach((message) => {
-    console.log('currentMessageGroup', currentMessageGroup);
     if (message.author === currentMessageGroup.author) {
       updateMessageGroup(message);
     } else {
@@ -60,7 +55,6 @@ const groupMessages = (messages: MessageData[]): MessageGroupProps[] => {
 const MessageHistory = (props: { messages: MessageData[] }) => {
   const drawMessageGroups = () => {
     const messageGroupPropsList = groupMessages(props.messages);
-    console.log('props list', messageGroupPropsList);
     return messageGroupPropsList.map((messageGroupProps) => (
       <MessageGroup key={uuid()} {...messageGroupProps} />
     ));
