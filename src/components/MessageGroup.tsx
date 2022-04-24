@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { v4 as uuid } from 'uuid';
+import { useAvatar } from '../hooks';
 import { MessageData } from '../MessageTypes';
 import Message from './Message';
 
@@ -7,16 +7,6 @@ type MessageGroupProps = {
   author: string; // Author of the message
   time: string; // Time the first message was sent
   messages: MessageData[]; // Messages in this group
-};
-
-const useAvatar = (avatarFileName: string) => {
-  const [avatar, setAvatar] = useState('');
-
-  import(`./../resources/${avatarFileName}`).then((module) => {
-    setAvatar(module.default);
-  });
-
-  return avatar;
 };
 
 const MessageGroup = (props: MessageGroupProps) => {
