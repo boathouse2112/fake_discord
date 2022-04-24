@@ -1,10 +1,11 @@
 import InterlocutorList from './InterlocutorList';
+import MessageView from './MessageView';
 
 const DirectMessages = () => {
   return (
     <div className="w-full flex">
       <InterlocutorList />
-      <div className="bg-neutral-600"></div>
+      <MessageView />
     </div>
   );
 };
