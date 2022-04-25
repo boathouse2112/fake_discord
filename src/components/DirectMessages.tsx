@@ -84,35 +84,39 @@ const useInterlocutors = (userID: string): [string[] | undefined, boolean] => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getInterlocutorNames = async () => {
-      const userDocRef = doc(firestore, 'Users', userID);
-      const userDocSnap = await getDoc(userDocRef);
+    // Get user.interlocutors
+    const getInterlocutorIDs = async (userID: string) => {
+      const docRef = doc(firestore, 'Users', userID);
+      const docSnap = await getDoc(docRef);
 
-      if (userDocSnap.exists()) {
-        const data = userDocSnap.data();
-        const interlocutorIDs = data.interlocutorIDs;
-
-        const interlocutorNames = await Promise.all<Promise<string>>(
-          interlocutorIDs.map(async (interlocutorID: string) => {
-            const interlocutorDocRef = doc(firestore, 'Users', interlocutorID);
-            const interlocutorDocSnap = await getDoc(interlocutorDocRef);
-            if (interlocutorDocSnap.exists()) {
-              const interlocutorData = interlocutorDocSnap.data();
-              return interlocutorData.name;
-            } else {
-              throw Error(`No document found: Users/${interlocutorID}`);
-            }
-          })
-        );
-
-        setLoading(false);
-        setInterlocutors(interlocutorNames);
-      } else {
+      if (!docSnap.exists()) {
         throw Error(`No document found: Users/${userID}`);
       }
+
+      const ids: string[] = docSnap.get('interlocutorIDs');
+      return ids;
     };
 
-    getInterlocutorNames();
+    // Get interlocutor.name
+    const getInterlocutorName = async (interlocutorID: string) => {
+      const docRef = doc(firestore, 'Users', interlocutorID);
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        throw Error(`No document found: Users/${interlocutorID}`);
+      }
+
+      const name: string = docSnap.get('name');
+      return name;
+    };
+
+    // Set interlocutors to the final list of names
+    getInterlocutorIDs(userID).then((ids: string[]) => {
+      Promise.all(ids.map(getInterlocutorName)).then((names: string[]) => {
+        setInterlocutors(names);
+        setLoading(false);
+      });
+    });
   }, [userID]);
 
   return [interlocutors, loading];
