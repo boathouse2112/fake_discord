@@ -74,21 +74,17 @@ const DUMMY_CONVERSATION: ConversationData = {
 // Temporary user ID
 const USER_ID = 'HHpwr6hXRpEg5loOSmWP';
 
-const useInterlocutorIDs = (
-  userID: string
-): [string[] | undefined, boolean] => {
-  const { data: user, isLoading } = useQuery(['user', userID], () =>
-    fetchUser(userID)
-  );
+const useInterlocutorIDs = (userID: string) => {
+  const { data: user } = useQuery(['user', userID], () => fetchUser(userID));
   const interlocutorIDs = user?.interlocutorIDs;
 
-  return [interlocutorIDs, isLoading];
+  return [interlocutorIDs];
 };
 
 // Handles DM state
 // In the future, will sync with Firestore database.
 const DirectMessages = (props: { user: string }) => {
-  const [interlocutorIDs, interlocutorsLoading] = useInterlocutorIDs(USER_ID);
+  const [interlocutorIDs] = useInterlocutorIDs(USER_ID);
 
   // DirectMessages deals with model MessageData, which is grouped for display within sub-components.
   const [currentConversation, setCurrentConversation] =

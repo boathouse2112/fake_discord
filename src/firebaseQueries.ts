@@ -24,32 +24,4 @@ const fetchUser = async (userID: string): Promise<User> => {
   return UserSchema.parse(userData);
 };
 
-const fetchInterlocutors = async (userID: string): Promise<string[]> => {
-  const docRef = doc(firestore, 'Users', userID);
-  const docSnap = await getDoc(docRef);
-
-  if (!docSnap.exists()) {
-    throw Error(`No document found: Users/${userID}`);
-  }
-
-  const ids: string[] = docSnap.get('interlocutorIDs');
-  return ids;
-};
-
-const fetchUserName = async (userID: string): Promise<string> => {
-  const docRef = doc(firestore, 'Users', userID);
-  const docSnap = await getDoc(docRef);
-
-  if (!docSnap.exists()) {
-    throw Error(`No document found: Users/${userID}`);
-  }
-
-  const name: string = docSnap.get('name');
-  return name;
-};
-
-const fetchUserNames = async (userIDs: string[]): Promise<string[]> => {
-  return Promise.all(userIDs.map(fetchUserName));
-};
-
-export { fetchUser, fetchUserNames };
+export { fetchUser };
