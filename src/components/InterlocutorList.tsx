@@ -1,22 +1,15 @@
-import { v4 as uuid } from 'uuid';
-import { useAvatar } from '../hooks';
+import InterlocutorListUser from './InterlocutorListUser';
 
-const InterlocutorList = (props: { interlocutors: string[] }) => {
-  const avatar = useAvatar('user_avatar.png');
-
+const InterlocutorList = (props: { interlocutorIDs: string[] }) => {
   const drawInterlocutors = () => {
-    return props.interlocutors.map((name) => (
-      <div key={uuid()} className="flex gap-2 items-center">
-        <div className="w-10 flex-shrink-0">
-          <img src={avatar} alt="user avatar" className="rounded-full"></img>
-        </div>
-        <h1 className="text-white font-sans">{name}</h1>
-      </div>
+    return props.interlocutorIDs.map((id) => (
+      <InterlocutorListUser key={id} id={id} />
     ));
   };
 
   return (
     <div className="flex-shrink-0 w-52 p-4 flex flex-col gap-2 bg-neutral-700">
+      {}
       {drawInterlocutors()}
     </div>
   );

@@ -1,11 +1,11 @@
-import { doc, getDoc } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useQuery } from 'react-query';
+import { fetchUser } from '../firebaseQueries';
 import {
   ConversationData,
   MessageContentData,
   MessageData,
 } from '../MessageTypes';
-import firestore from './../firestore';
 import InterlocutorList from './InterlocutorList';
 import MessageView from './MessageView';
 
@@ -74,58 +74,21 @@ const DUMMY_CONVERSATION: ConversationData = {
 // Temporary user ID
 const USER_ID = 'HHpwr6hXRpEg5loOSmWP';
 
-// Load interlocutor list from firestore.
-// Returns [interlocutors, loading]
-const useInterlocutors = (userID: string): [string[] | undefined, boolean] => {
-  const [interlocutors, setInterlocutors] = useState<string[] | undefined>(
-    undefined
+const useInterlocutorIDs = (
+  userID: string
+): [string[] | undefined, boolean] => {
+  const { data: user, isLoading } = useQuery(['user', userID], () =>
+    fetchUser(userID)
   );
+  const interlocutorIDs = user?.interlocutorIDs;
 
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Get user.interlocutors
-    const getInterlocutorIDs = async (userID: string) => {
-      const docRef = doc(firestore, 'Users', userID);
-      const docSnap = await getDoc(docRef);
-
-      if (!docSnap.exists()) {
-        throw Error(`No document found: Users/${userID}`);
-      }
-
-      const ids: string[] = docSnap.get('interlocutorIDs');
-      return ids;
-    };
-
-    // Get interlocutor.name
-    const getInterlocutorName = async (interlocutorID: string) => {
-      const docRef = doc(firestore, 'Users', interlocutorID);
-      const docSnap = await getDoc(docRef);
-
-      if (!docSnap.exists()) {
-        throw Error(`No document found: Users/${interlocutorID}`);
-      }
-
-      const name: string = docSnap.get('name');
-      return name;
-    };
-
-    // Set interlocutors to the final list of names
-    getInterlocutorIDs(userID).then((ids: string[]) => {
-      Promise.all(ids.map(getInterlocutorName)).then((names: string[]) => {
-        setInterlocutors(names);
-        setLoading(false);
-      });
-    });
-  }, [userID]);
-
-  return [interlocutors, loading];
+  return [interlocutorIDs, isLoading];
 };
 
 // Handles DM state
 // In the future, will sync with Firestore database.
 const DirectMessages = (props: { user: string }) => {
-  const [interlocutors, interlocutorsLoading] = useInterlocutors(USER_ID);
+  const [interlocutorIDs, interlocutorsLoading] = useInterlocutorIDs(USER_ID);
 
   // DirectMessages deals with model MessageData, which is grouped for display within sub-components.
   const [currentConversation, setCurrentConversation] =
@@ -148,8 +111,7 @@ const DirectMessages = (props: { user: string }) => {
 
   return (
     <div className="w-full flex">
-      {interlocutorsLoading && <InterlocutorList interlocutors={[]} />}
-      {interlocutors && <InterlocutorList interlocutors={interlocutors} />}
+      <InterlocutorList interlocutorIDs={interlocutorIDs ?? []} />
       <MessageView
         conversation={currentConversation}
         submitMessage={submitMessage}
