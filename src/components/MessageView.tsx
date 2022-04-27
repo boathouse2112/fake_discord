@@ -1,4 +1,4 @@
-import { ConversationData, MessageContentData } from '../MessageTypes';
+import { ConversationData, MessageContentData } from '../types';
 import MessageHistory from './MessageHistory';
 import MessageInput from './MessageInput';
 

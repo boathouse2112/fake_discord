@@ -1,11 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { fetchUser } from '../firebaseQueries';
-import {
-  ConversationData,
-  MessageContentData,
-  MessageData,
-} from '../MessageTypes';
+import { ConversationData, MessageContentData, MessageData } from '../types';
 import InterlocutorList from './InterlocutorList';
 import MessageView from './MessageView';
 

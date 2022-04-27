@@ -1,4 +1,4 @@
-import { MessageContentData } from '../MessageTypes';
+import { MessageContentData } from '../types';
 
 type MessageProps = {
   time: string;

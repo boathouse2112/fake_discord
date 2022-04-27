@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { useAvatar } from '../hooks';
-import { MessageData } from '../MessageTypes';
+import { MessageData } from '../types';
 import Message from './Message';
 
 type MessageGroupProps = {

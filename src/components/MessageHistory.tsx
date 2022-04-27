@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { MessageData } from '../MessageTypes';
+import { MessageData } from '../types';
 import MessageGroup, { MessageGroupProps } from './MessageGroup';
 
 // Group model message data into MessageGroup view props.

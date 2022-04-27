@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MessageContentData, TextContentData } from '../MessageTypes';
+import { MessageContentData, TextContentData } from '../types';
 
 const MessageInput = (props: {
   submitMessage: (content: MessageContentData) => void;

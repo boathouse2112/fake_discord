@@ -9,7 +9,6 @@ const InterlocutorList = (props: { interlocutorIDs: string[] }) => {
 
   return (
     <div className="flex-shrink-0 w-52 p-4 flex flex-col gap-2 bg-neutral-700">
-      {}
       {drawInterlocutors()}
     </div>
   );
