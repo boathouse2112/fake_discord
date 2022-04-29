@@ -1,7 +1,8 @@
+import { Dayjs } from 'dayjs';
 import { MessageContent } from '../types';
 
 type MessageProps = {
-  time: string;
+  time: Dayjs;
   content: MessageContent;
 };
 

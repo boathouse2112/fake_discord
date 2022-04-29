@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import {
   QueryClient,
   useMutation,
@@ -56,7 +57,7 @@ const MessageView = (props: {
     const message: MessageData = {
       id: uuid(),
       authorID: props.userID,
-      time: 'currentTime',
+      time: dayjs(),
       content,
     };
 

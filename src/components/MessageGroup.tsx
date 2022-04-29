@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { useAvatar, useUserName } from '../hooks';
 import { MessageData } from '../types';
 import Message from './Message';
@@ -5,7 +6,7 @@ import Message from './Message';
 type MessageGroupProps = {
   id: string;
   authorID: string; // Author of the message
-  time: string; // Time the first message was sent
+  time: dayjs.Dayjs; // Time the first message was sent
   messages: MessageData[]; // Messages in this group
 };
 
@@ -31,7 +32,7 @@ const MessageGroup = (props: MessageGroupProps) => {
       <div className="flex flex-col text-white">
         <div className="flex flex-row gap-2">
           <h1>{userName ?? ''}</h1>
-          <h2>{props.time}</h2>
+          <h2>{props.time.fromNow()}</h2>
         </div>
         {drawMessages()}
       </div>

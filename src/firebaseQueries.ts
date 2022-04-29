@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import {
   collection,
   doc,
@@ -92,7 +93,8 @@ const fetchConversation = async (
     delete Object.assign(message, {
       authorID: message['author'],
     })['author'];
-    message.time = 'time';
+
+    message.time = dayjs.unix(message.time.seconds);
     message.content = { type: 'text', text: message.content };
     return message;
   });
