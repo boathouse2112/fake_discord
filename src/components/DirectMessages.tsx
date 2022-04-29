@@ -27,7 +27,6 @@ const useConversationParticipants = (conversationIDs: string[] | undefined) => {
 };
 
 // Handles DM state
-// In the future, will sync with Firestore database.
 const DirectMessages = (props: { user: string }) => {
   const user = useUser(USER_ID);
   const conversationParticipants = useConversationParticipants(
