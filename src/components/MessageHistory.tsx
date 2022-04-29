@@ -62,7 +62,7 @@ const MessageHistory = (props: { messages: MessageData[] }) => {
   };
 
   return (
-    <div className="flex-grow flex flex-col bg-neutral-600">
+    <div className="h-full flex flex-col bg-neutral-600 overflow-y-scroll">
       {drawMessageGroups()}
     </div>
   );

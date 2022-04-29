@@ -64,7 +64,7 @@ const MessageView = (props: {
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="w-full h-full flex flex-col">
       <MessageHistory messages={conversation?.messages ?? []} />
       <MessageInput submitMessage={submitMessage} />
     </div>
