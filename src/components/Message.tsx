@@ -1,8 +1,8 @@
-import { MessageContentData } from '../types';
+import { MessageContent } from '../types';
 
 type MessageProps = {
   time: string;
-  content: MessageContentData;
+  content: MessageContent;
 };
 
 // Display a message - it's time and contents

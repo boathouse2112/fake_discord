@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
-import { fetchUser } from '../firebaseQueries';
-import { ConversationData, MessageContentData, MessageData } from '../types';
+import { v4 as uuid } from 'uuid';
+import { fetchConversationParticipants, fetchUser } from '../firebaseQueries';
+import { MessageContent, User } from '../types';
 import InterlocutorList from './InterlocutorList';
 import MessageView from './MessageView';
 
+/*
 const DUMMY_MESSAGES: MessageData[] = [
   {
     author: 'Mark',
@@ -66,26 +68,75 @@ const DUMMY_CONVERSATION: ConversationData = {
   interlocutor: 'Jannet',
   messages: DUMMY_MESSAGES,
 };
+*/
 
 // Temporary user ID
 const USER_ID = 'HHpwr6hXRpEg5loOSmWP';
 
-const useInterlocutorIDs = (userID: string) => {
-  const { data: user } = useQuery(['user', userID], () => fetchUser(userID));
-  const interlocutorIDs = user?.interlocutorIDs;
+const useUser = (id: string): User | undefined => {
+  const { data: user } = useQuery(['user', id], () => fetchUser(id));
+  return user;
+};
 
-  return [interlocutorIDs];
+const useConversationParticipants = (conversationIDs: string[] | undefined) => {
+  const { data: participants } = useQuery(
+    ['conversation-participants', conversationIDs],
+    () =>
+      conversationIDs !== undefined
+        ? fetchConversationParticipants(conversationIDs)
+        : undefined,
+    { enabled: !!conversationIDs }
+  );
+
+  return participants;
 };
 
 // Handles DM state
 // In the future, will sync with Firestore database.
 const DirectMessages = (props: { user: string }) => {
-  const [interlocutorIDs] = useInterlocutorIDs(USER_ID);
+  const user = useUser(USER_ID);
+  const conversationParticipants = useConversationParticipants(
+    user?.directMessageIDs
+  );
 
-  // DirectMessages deals with model MessageData, which is grouped for display within sub-components.
-  const [currentConversation, setCurrentConversation] =
-    useState<ConversationData>(DUMMY_CONVERSATION);
+  const [currentInterlocutorID, setCurrentInterlocutorID] = useState<
+    string | undefined
+  >(undefined);
 
+  const interlocutorIDs = user?.interlocutorIDs;
+
+  // Filter the user's conversations to find the one with both the user and the currentInterlocutor
+  const currentConversationID = (() => {
+    if (
+      conversationParticipants === undefined ||
+      user === undefined ||
+      currentInterlocutorID === undefined
+    ) {
+      return undefined;
+    }
+
+    for (const { conversationID, participants } of conversationParticipants) {
+      if (
+        participants.includes(user.id) &&
+        participants.includes(currentInterlocutorID)
+      ) {
+        return conversationID;
+      }
+    }
+
+    return undefined;
+  })();
+
+  const submitMessage = async (content: MessageContent) => {
+    const authorID = uuid();
+    const time = 'time';
+    const message = {
+      authorID: USER_ID,
+      time: 'currentTime',
+      content,
+    };
+  };
+  /*
   // Submits a message from the current user, to the current conversation
   const submitMessage = (content: MessageContentData) => {
     const message: MessageData = {
@@ -100,14 +151,15 @@ const DirectMessages = (props: { user: string }) => {
       messages: [...currentConversation.messages, message],
     });
   };
+  */
 
   return (
     <div className="w-full flex">
-      <InterlocutorList interlocutorIDs={interlocutorIDs ?? []} />
-      <MessageView
-        conversation={currentConversation}
-        submitMessage={submitMessage}
+      <InterlocutorList
+        interlocutorIDs={interlocutorIDs ?? []}
+        setCurrentInterlocutorID={setCurrentInterlocutorID}
       />
+      <MessageView conversationID={currentConversationID} />
     </div>
   );
 };

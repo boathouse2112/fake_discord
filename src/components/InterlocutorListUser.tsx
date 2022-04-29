@@ -1,20 +1,17 @@
-import { useQuery } from 'react-query';
-import { fetchUser } from '../firebaseQueries';
-import { useAvatar } from '../hooks';
+import { useAvatar, useUserName } from '../hooks';
 
-const useUserName = (userID: string) => {
-  const { data: user } = useQuery(['user', userID], () => fetchUser(userID));
-  const name = user?.name;
-
-  return name;
-};
-
-const InterlocutorListUser = (props: { id: string }) => {
+const InterlocutorListUser = (props: {
+  id: string;
+  setCurrentInterlocutorID(id: string): void;
+}) => {
   const avatar = useAvatar('user_avatar.png');
   const name = useUserName(props.id);
 
   return (
-    <div className="flex gap-2 items-center">
+    <div
+      className="flex gap-2 items-center cursor-pointer"
+      onClick={() => props.setCurrentInterlocutorID(props.id)}
+    >
       <div className="w-10 flex-shrink-0">
         <img src={avatar} alt="user avatar" className="rounded-full"></img>
       </div>

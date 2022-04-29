@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { MessageContentData, TextContentData } from '../types';
+import { MessageContent, TextContent } from '../types';
 
 const MessageInput = (props: {
-  submitMessage: (content: MessageContentData) => void;
+  submitMessage: (content: MessageContent) => void;
 }) => {
   const [state, setState] = useState('');
 
@@ -21,7 +21,7 @@ const MessageInput = (props: {
 
   // On submit, call submitMessage prop, and clear message input.
   const handleSubmit = () => {
-    const content: TextContentData = { type: 'text', text: state };
+    const content: TextContent = { type: 'text', text: state };
     props.submitMessage(content);
 
     setState('');
