@@ -4,4 +4,4 @@ A Discord clone!
 
 ## Features
 
-- None!
+- Send direct messages.
