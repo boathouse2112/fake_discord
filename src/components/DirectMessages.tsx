@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
-import { v4 as uuid } from 'uuid';
 import { fetchConversationParticipants, fetchUser } from '../firebaseQueries';
-import { MessageContent, User } from '../types';
+import { User } from '../types';
 import InterlocutorList from './InterlocutorList';
 import MessageView from './MessageView';
 
@@ -127,39 +126,13 @@ const DirectMessages = (props: { user: string }) => {
     return undefined;
   })();
 
-  const submitMessage = async (content: MessageContent) => {
-    const authorID = uuid();
-    const time = 'time';
-    const message = {
-      authorID: USER_ID,
-      time: 'currentTime',
-      content,
-    };
-  };
-  /*
-  // Submits a message from the current user, to the current conversation
-  const submitMessage = (content: MessageContentData) => {
-    const message: MessageData = {
-      author: props.user,
-      time: 'currentTime',
-      content,
-    };
-
-    // Push a message to currentCoversation
-    setCurrentConversation({
-      interlocutor: currentConversation.interlocutor,
-      messages: [...currentConversation.messages, message],
-    });
-  };
-  */
-
   return (
     <div className="w-full flex">
       <InterlocutorList
         interlocutorIDs={interlocutorIDs ?? []}
         setCurrentInterlocutorID={setCurrentInterlocutorID}
       />
-      <MessageView conversationID={currentConversationID} />
+      <MessageView userID={USER_ID} conversationID={currentConversationID} />
     </div>
   );
 };

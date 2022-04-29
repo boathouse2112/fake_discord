@@ -1,6 +1,21 @@
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+  serverTimestamp,
+  setDoc,
+} from 'firebase/firestore';
 import firestore from './firestore';
-import { Conversation, ConversationSchema, User, UserSchema } from './types';
+import {
+  Conversation,
+  ConversationSchema,
+  MessageData,
+  User,
+  UserSchema,
+} from './types';
 
 const fetchUser = async (userID: string): Promise<User> => {
   const docRef = doc(firestore, 'Users', userID);
@@ -64,7 +79,11 @@ const fetchConversation = async (
     conversationID,
     'Messages'
   );
-  const messagesCollectionSnap = await getDocs(messagesCollectionRef);
+  const querySortByTime = await query(
+    messagesCollectionRef,
+    orderBy('time', 'asc')
+  );
+  const messagesCollectionSnap = await getDocs(querySortByTime);
   const messages = messagesCollectionSnap.docs.map((docSnap) => {
     const message = docSnap.data();
 
@@ -80,8 +99,47 @@ const fetchConversation = async (
 
   conversationData.messages = messages;
 
-  console.log(conversationData);
   return ConversationSchema.parse(conversationData);
 };
 
-export { fetchUser, fetchConversationParticipants, fetchConversation };
+// Add the given message to the conversation with the given ID
+const addMessage = (conversationID: string, message: MessageData) => {
+  const messageID = message.id;
+
+  // Convert message.content to a string, and convert message.time to server timestamp
+  if (message.content.type !== 'text') {
+    return;
+  }
+
+  const dbMessage = message as any;
+  delete Object.assign(dbMessage, {
+    author: dbMessage['authorID'],
+  })['authorID'];
+
+  Object.assign(dbMessage, {
+    content: dbMessage['content'].text,
+  });
+
+  Object.assign(dbMessage, {
+    time: serverTimestamp(),
+  });
+
+  delete dbMessage['id'];
+
+  const messageRef = doc(
+    firestore,
+    'DirectMessages',
+    conversationID,
+    'Messages',
+    messageID
+  );
+
+  setDoc(messageRef, dbMessage);
+};
+
+export {
+  fetchUser,
+  fetchConversationParticipants,
+  fetchConversation,
+  addMessage,
+};
