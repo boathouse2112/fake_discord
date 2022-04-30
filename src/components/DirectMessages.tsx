@@ -8,8 +8,9 @@ import MessageView from './MessageView';
 // Temporary user ID
 const USER_ID = 'HHpwr6hXRpEg5loOSmWP';
 
-const useUser = (id: string): User | undefined => {
-  const { data: user } = useQuery(['user', id], () => fetchUser(id));
+// Gets the user with the given ID
+const useUser = (userID: string): User | undefined => {
+  const { data: user } = useQuery(['user', userID], () => fetchUser(userID));
   return user;
 };
 

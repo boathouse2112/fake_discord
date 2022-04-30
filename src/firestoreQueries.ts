@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// I want to infer types for all schemas, even if the types aren't used.
 import dayjs, { Dayjs } from 'dayjs';
 import {
   collection,
@@ -13,18 +15,21 @@ import {
 import { z } from 'zod';
 import firestore from './firestore';
 import {
+  Channel,
+  ChannelSchema,
   Conversation,
   MessageContentSchema,
   MessageData,
+  ServerData,
+  ServerDataSchema,
   User,
   UserSchema,
 } from './types';
 
 const FirestoreUserSchema = UserSchema.omit({ id: true });
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type FirestoreUser = z.infer<typeof FirestoreUserSchema>;
 
-// Fetch the user with the given id
+// Fetch the user with the given ID
 const fetchUser = async (userID: string): Promise<User> => {
   const docRef = doc(firestore, 'Users', userID);
   const docSnap = await getDoc(docRef);
@@ -35,8 +40,47 @@ const fetchUser = async (userID: string): Promise<User> => {
 
   const userData = FirestoreUserSchema.parse(docSnap.data());
 
-  // Add the id field
+  // Add the ID field
   return { ...userData, id: docSnap.id };
+};
+
+const FirestoreChannelSchema = ChannelSchema.omit({
+  id: true,
+});
+type FirestoreChannel = z.infer<typeof FirestoreChannelSchema>;
+
+// Fetch all channels in the server with the given ID
+const fetchChannels = async (serverID: string): Promise<Channel[]> => {
+  const collectionRef = collection(firestore, 'Servers', serverID, 'Channels');
+  const querySnap = await getDocs(collectionRef);
+
+  const channels = querySnap.docs.map((doc) => {
+    const firestoreChannel = FirestoreChannelSchema.parse(doc.data());
+    return { ...firestoreChannel, id: doc.id };
+  });
+  return channels;
+};
+
+const FirestoreServerSchema = ServerDataSchema.omit({
+  id: true,
+  channels: true,
+});
+type FirestoreServer = z.infer<typeof FirestoreServerSchema>;
+
+// Fetch the server with the given ID
+const fetchServer = async (serverID: string): Promise<ServerData> => {
+  // First fetch
+  const docRef = doc(firestore, 'Servers', serverID);
+  const docSnap = await getDoc(docRef);
+
+  if (!docSnap.exists()) {
+    throw Error(`No document found: Servers/${serverID}`);
+  }
+
+  const serverData = FirestoreServerSchema.parse(docSnap.data());
+  const channels = await fetchChannels(serverID);
+
+  return { ...serverData, channels, id: serverID };
 };
 
 // Get a list of participants of the given conversation
@@ -50,7 +94,7 @@ const fetchSingleConversationParticipants = async (
     throw Error(`No document found: Conversations/${conversationID}`);
   }
 
-  const StringArraySchema = z.array(z.string());
+  const StringArraySchema = z.string().array();
   const participants = StringArraySchema.parse(docSnap.get('participants'));
 
   return { conversationID, participants };
@@ -96,9 +140,8 @@ const parseMessageData = (
 };
 
 const FirestoreConversationSchema = z.object({
-  participants: z.array(z.string()),
+  participants: z.string().array(),
 });
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type FirestoreConversation = z.infer<typeof FirestoreConversationSchema>;
 
 // Fetch the conversation with the given ID
@@ -183,4 +226,5 @@ export {
   fetchConversationParticipants,
   fetchConversation,
   addMessage,
+  fetchServer,
 };

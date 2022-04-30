@@ -35,11 +35,38 @@ const MessageDataSchema = z.object({
 });
 type MessageData = z.infer<typeof MessageDataSchema>;
 
+// Represents a direct-message conversation between multiple users
 const ConversationSchema = z.object({
-  participants: z.array(z.string()),
-  messages: z.array(MessageDataSchema),
+  participants: z.string().array(),
+  messages: MessageDataSchema.array(),
 });
 type Conversation = z.infer<typeof ConversationSchema>;
 
-export type { User, TextContent, MessageContent, MessageData, Conversation };
-export { UserSchema, MessageContentSchema };
+// Represents a channel in a server
+// Excludes the Messages subcollection, which should be fetched separately
+const ChannelSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+});
+type Channel = z.infer<typeof ChannelSchema>;
+
+// Represents a server
+// TODO: I really shouldn't load all
+const ServerDataSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  memberIDs: z.string().array(),
+  channels: ChannelSchema.array(),
+});
+type ServerData = z.infer<typeof ServerDataSchema>;
+
+export type {
+  User,
+  TextContent,
+  MessageContent,
+  MessageData,
+  Conversation,
+  Channel,
+  ServerData,
+};
+export { UserSchema, MessageContentSchema, ChannelSchema, ServerDataSchema };
