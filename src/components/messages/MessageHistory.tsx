@@ -1,4 +1,4 @@
-import { MessageData } from '../types';
+import { MessageData } from '../../types';
 import MessageGroup, { MessageGroupProps } from './MessageGroup';
 
 // Group model message data into MessageGroup view props.

@@ -1,4 +1,4 @@
-import avatar from './../resources/discord_avatar.png';
+import avatar from './../../resources/discord_avatar.png';
 
 const ServerList = () => {
   return (

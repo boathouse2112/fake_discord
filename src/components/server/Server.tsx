@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
-import { fetchServer } from '../firestoreQueries';
-import { Channel, ServerData } from '../types';
+import { fetchServer } from '../../firestoreQueries';
+import { Channel, ServerData } from '../../types';
+import ChannelView from '../server/ChannelView';
 import ChannelList from './ChannelList';
-import ChannelView from './ChannelView';
 import ServerHeader from './ServerHeader';
 
 // Temporary server id

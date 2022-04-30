@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
-import { useAvatar, useUserName } from '../hooks';
-import { MessageData } from '../types';
+import { useAvatar, useUserName } from '../../hooks';
+import { MessageData } from '../../types';
 import Message from './Message';
 
 type MessageGroupProps = {

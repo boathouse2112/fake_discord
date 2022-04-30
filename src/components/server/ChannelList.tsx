@@ -1,4 +1,4 @@
-import { Channel } from '../types';
+import { Channel } from '../../types';
 import ChannelListElement from './ChannelListElement';
 
 const ChannelList = (props: {

@@ -6,10 +6,10 @@ import {
   useQuery,
   useQueryClient,
 } from 'react-query';
-import { addMessage, fetchMessages } from '../firestoreQueries';
-import { Channel, MessageContent, MessageData } from '../types';
-import MessageHistory from './MessageHistory';
-import MessageInput from './MessageInput';
+import { addMessage, fetchMessages } from '../../firestoreQueries';
+import { Channel, MessageContent, MessageData } from '../../types';
+import MessageHistory from '../messages/MessageHistory';
+import MessageInput from '../messages/MessageInput';
 
 const useChannelMessages = (
   serverID: string | undefined,

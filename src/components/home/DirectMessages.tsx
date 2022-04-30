@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
-import { fetchConversationParticipants, fetchUser } from '../firestoreQueries';
-import { User } from '../types';
+import {
+  fetchConversationParticipants,
+  fetchUser,
+} from '../../firestoreQueries';
+import { User } from '../../types';
+import MessageView from '../messages/MessageView';
 import InterlocutorList from './InterlocutorList';
-import MessageView from './MessageView';
 
 // Temporary user ID
 const USER_ID = 'HHpwr6hXRpEg5loOSmWP';

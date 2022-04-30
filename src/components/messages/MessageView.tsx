@@ -6,8 +6,8 @@ import {
   useQuery,
   useQueryClient,
 } from 'react-query';
-import { addMessage, fetchConversation } from '../firestoreQueries';
-import { MessageContent, MessageData } from '../types';
+import { addMessage, fetchConversation } from '../../firestoreQueries';
+import { MessageContent, MessageData } from '../../types';
 import MessageHistory from './MessageHistory';
 import MessageInput from './MessageInput';
 

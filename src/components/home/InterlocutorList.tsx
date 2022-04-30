@@ -1,4 +1,4 @@
-import InterlocutorListUser from './InterlocutorListUser';
+import InterlocutorListUser from './InterlocutorListElement';
 
 const InterlocutorList = (props: {
   interlocutorIDs: string[];

@@ -1,4 +1,4 @@
-import { useAvatar, useUserName } from '../hooks';
+import { useAvatar, useUserName } from '../../hooks';
 
 const InterlocutorListUser = (props: {
   id: string;
