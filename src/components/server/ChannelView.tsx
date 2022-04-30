@@ -1,3 +1,4 @@
+import { useAuthUser } from '@react-query-firebase/auth';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import {
@@ -7,7 +8,7 @@ import {
   useQueryClient,
 } from 'react-query';
 import { useParams } from 'react-router-dom';
-import { useFirebaseAuth } from '../../FirebaseAuthContext';
+import { auth } from '../../firebase';
 import { addMessage, fetchMessages } from '../../firestoreQueries';
 import { MessageContent, MessageData } from '../../types';
 import MessageHistory from '../messages/MessageHistory';
@@ -64,8 +65,8 @@ const useAddMessage = (
 const ChannelView = () => {
   const { serverID, channelID } = useParams();
 
-  const authUser = useFirebaseAuth();
-  const userID = authUser?.uid;
+  const authUser = useAuthUser('auth-user', auth);
+  const userID = authUser?.data?.uid;
 
   const queryClient = useQueryClient();
   const messages = useChannelMessages(userID, serverID, channelID);

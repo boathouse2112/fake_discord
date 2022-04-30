@@ -1,6 +1,7 @@
+import { useAuthUser } from '@react-query-firebase/auth';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
-import { useFirebaseAuth } from '../../FirebaseAuthContext';
+import { auth } from '../../firebase';
 import {
   fetchConversationParticipants,
   fetchUser,
@@ -35,8 +36,8 @@ const useConversationParticipants = (conversationIDs: string[] | undefined) => {
 
 // Handles DM state
 const DirectMessages = (props: { user: string }) => {
-  const authUser = useFirebaseAuth();
-  const userID = authUser?.uid;
+  const authUser = useAuthUser('auth-user', auth);
+  const userID = authUser?.data?.uid;
 
   const user = useUser(userID);
   const conversationParticipants = useConversationParticipants(

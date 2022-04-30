@@ -1,3 +1,4 @@
+import { useAuthUser } from '@react-query-firebase/auth';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import {
@@ -6,7 +7,7 @@ import {
   useQuery,
   useQueryClient,
 } from 'react-query';
-import { useFirebaseAuth } from '../../FirebaseAuthContext';
+import { auth } from '../../firebase';
 import { addMessage, fetchConversation } from '../../firestoreQueries';
 import { MessageContent, MessageData } from '../../types';
 import MessageHistory from './MessageHistory';
@@ -49,8 +50,8 @@ const useAddMessage = (
 
 const MessageView = (props: { conversationID: string | undefined }) => {
   const queryClient = useQueryClient();
-  const authUser = useFirebaseAuth();
-  const userID = authUser?.uid;
+  const authUser = useAuthUser('auth-user', auth);
+  const userID = authUser?.data?.uid;
   const conversation = useConversation(props.conversationID);
   const addMessageMutation = useAddMessage(props.conversationID, queryClient);
 
