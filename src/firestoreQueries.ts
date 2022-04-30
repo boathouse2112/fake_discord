@@ -13,7 +13,7 @@ import {
   setDoc,
 } from 'firebase/firestore';
 import { z } from 'zod';
-import firestore from './firestore';
+import { firestore } from './firebase';
 import {
   Channel,
   ChannelSchema,

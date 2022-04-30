@@ -7,7 +7,8 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  // Disabling strict-mode for firebaseui-web-react, per https://github.com/firebase/firebaseui-web-react/issues/172
+  // <React.StrictMode>
+  <App />
+  // </React.StrictMode>
 );

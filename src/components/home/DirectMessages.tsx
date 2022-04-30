@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
+import { useFirebaseAuth } from '../../FirebaseAuthContext';
 import {
   fetchConversationParticipants,
   fetchUser,
@@ -8,12 +9,14 @@ import { User } from '../../types';
 import MessageView from '../messages/MessageView';
 import InterlocutorList from './InterlocutorList';
 
-// Temporary user ID
-const USER_ID = 'HHpwr6hXRpEg5loOSmWP';
-
 // Gets the user with the given ID
-const useUser = (userID: string): User | undefined => {
-  const { data: user } = useQuery(['user', userID], () => fetchUser(userID));
+const useUser = (userID: string | undefined): User | undefined => {
+  const { data: user } = useQuery(
+    ['user', userID],
+    () => (userID !== undefined ? fetchUser(userID) : undefined),
+    { enabled: !!userID }
+  );
+  console.log(userID);
   return user;
 };
 
@@ -32,7 +35,10 @@ const useConversationParticipants = (conversationIDs: string[] | undefined) => {
 
 // Handles DM state
 const DirectMessages = (props: { user: string }) => {
-  const user = useUser(USER_ID);
+  const authUser = useFirebaseAuth();
+  const userID = authUser?.uid;
+
+  const user = useUser(userID);
   const conversationParticipants = useConversationParticipants(
     user?.conversationIDs
   );
@@ -71,7 +77,7 @@ const DirectMessages = (props: { user: string }) => {
         interlocutorIDs={interlocutorIDs ?? []}
         setCurrentInterlocutorID={setCurrentInterlocutorID}
       />
-      <MessageView userID={USER_ID} conversationID={currentConversationID} />
+      <MessageView conversationID={currentConversationID} />
     </div>
   );
 };

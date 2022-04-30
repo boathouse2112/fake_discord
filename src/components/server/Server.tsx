@@ -13,7 +13,7 @@ const useServer = (serverID: string | undefined): ServerData | undefined => {
   return server;
 };
 
-const Server = (props: { userID: string }) => {
+const Server = () => {
   const { serverID, channelID: currentChannelID } = useParams();
   const server = useServer(serverID);
 
@@ -39,9 +39,7 @@ const Server = (props: { userID: string }) => {
             />
             {
               // If this is the root server page, without any channel, render an empty ChannelView
-              currentChannelID === undefined ? (
-                <ChannelView userID={props.userID} />
-              ) : undefined
+              currentChannelID === undefined ? <ChannelView /> : undefined
             }
             <Outlet />
           </div>

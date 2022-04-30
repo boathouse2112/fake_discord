@@ -6,6 +6,7 @@ import {
   useQuery,
   useQueryClient,
 } from 'react-query';
+import { useFirebaseAuth } from '../../FirebaseAuthContext';
 import { addMessage, fetchConversation } from '../../firestoreQueries';
 import { MessageContent, MessageData } from '../../types';
 import MessageHistory from './MessageHistory';
@@ -46,18 +47,21 @@ const useAddMessage = (
   });
 };
 
-const MessageView = (props: {
-  userID: string;
-  conversationID: string | undefined;
-}) => {
+const MessageView = (props: { conversationID: string | undefined }) => {
   const queryClient = useQueryClient();
+  const authUser = useFirebaseAuth();
+  const userID = authUser?.uid;
   const conversation = useConversation(props.conversationID);
   const addMessageMutation = useAddMessage(props.conversationID, queryClient);
 
   const submitMessage = (content: MessageContent) => {
+    if (!userID) {
+      throw Error('Submitted message while not signed in.');
+    }
+
     const message: MessageData = {
       id: nanoid(),
-      authorID: props.userID,
+      authorID: userID,
       time: dayjs(),
       content,
     };

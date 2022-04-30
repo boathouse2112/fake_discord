@@ -7,18 +7,19 @@ import {
   useQueryClient,
 } from 'react-query';
 import { useParams } from 'react-router-dom';
+import { useFirebaseAuth } from '../../FirebaseAuthContext';
 import { addMessage, fetchMessages } from '../../firestoreQueries';
 import { MessageContent, MessageData } from '../../types';
 import MessageHistory from '../messages/MessageHistory';
 import MessageInput from '../messages/MessageInput';
 
 const useChannelMessages = (
-  userID: string,
+  userID: string | undefined,
   serverID: string | undefined,
   channelID: string | undefined
 ) => {
   const queryFn = () =>
-    serverID === undefined || channelID === undefined
+    userID === undefined || serverID === undefined || channelID === undefined
       ? undefined
       : fetchMessages(['Servers', serverID, 'Channels', channelID, 'Messages']);
 
@@ -60,17 +61,24 @@ const useAddMessage = (
   });
 };
 
-const ChannelView = (props: { userID: string }) => {
+const ChannelView = () => {
   const { serverID, channelID } = useParams();
 
+  const authUser = useFirebaseAuth();
+  const userID = authUser?.uid;
+
   const queryClient = useQueryClient();
-  const messages = useChannelMessages(props.userID, serverID, channelID);
+  const messages = useChannelMessages(userID, serverID, channelID);
   const addMessageMutation = useAddMessage(serverID, channelID, queryClient);
 
   const submitMessage = (content: MessageContent) => {
+    if (!userID) {
+      throw Error('Submitted message while not signed in.');
+    }
+
     const message: MessageData = {
       id: nanoid(),
-      authorID: props.userID,
+      authorID: userID,
       time: dayjs(),
       content,
     };

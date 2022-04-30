@@ -21,7 +21,6 @@ const ServerList = () => {
   );
 
   const drawServerIcons = () => {
-    console.log(serverNames);
     if (serverNames === undefined) return <></>;
 
     return serverNames.map(({ id, name }) => (
