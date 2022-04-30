@@ -17,7 +17,6 @@ const useUser = (userID: string | undefined): User | undefined => {
     () => (userID !== undefined ? fetchUser(userID) : undefined),
     { enabled: !!userID }
   );
-  console.log(userID);
   return user;
 };
 
