@@ -1,12 +1,17 @@
-import avatar from './../resources/discord_avatar.png';
+import { Link } from 'react-router-dom';
+import avatar from './../../resources/discord_avatar.png';
 
-const ServerIcon = (props: { name: string }) => {
+const ServerIcon = (props: { serverID: string; serverName: string }) => {
   return (
-    <img
-      src={avatar}
-      alt={'Server ' + props.name}
-      className="rounded-full"
-    ></img>
+    <div>
+      <Link to={`/${props.serverID}`}>
+        <img
+          src={avatar}
+          alt={'Server ' + props.serverName}
+          className="rounded-full"
+        ></img>
+      </Link>
+    </div>
   );
 };
 

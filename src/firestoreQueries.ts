@@ -83,6 +83,17 @@ const fetchServer = async (serverID: string): Promise<ServerData> => {
   return { ...serverData, channels, id: serverID };
 };
 
+const fetchServerNames = async (): Promise<{ id: string; name: string }[]> => {
+  const collectionRef = collection(firestore, 'Servers');
+  const querySnap = await getDocs(collectionRef);
+
+  const serverNames = querySnap.docs.map((doc) => {
+    const firestoreServer = FirestoreServerSchema.parse(doc.data());
+    return { id: doc.id, name: firestoreServer.name };
+  });
+  return serverNames;
+};
+
 // Get a list of participants of the given conversation
 const fetchSingleConversationParticipants = async (
   conversationID: string
@@ -248,4 +259,5 @@ export {
   fetchConversation,
   addMessage,
   fetchServer,
+  fetchServerNames,
 };

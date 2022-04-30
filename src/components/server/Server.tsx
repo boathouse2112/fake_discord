@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
+import { useParams } from 'react-router-dom';
 import { fetchServer } from '../../firestoreQueries';
 import { Channel, ServerData } from '../../types';
 import ChannelView from '../server/ChannelView';
@@ -7,18 +8,18 @@ import ChannelList from './ChannelList';
 import ServerHeader from './ServerHeader';
 
 // Temporary server id
-const SERVER_ID = 'serverA';
 const USER_ID = 'HHpwr6hXRpEg5loOSmWP';
 
-const useServer = (serverID: string): ServerData | undefined => {
+const useServer = (serverID: string | undefined): ServerData | undefined => {
   const { data: server } = useQuery(['server', serverID], () =>
-    fetchServer(serverID)
+    serverID ? fetchServer(serverID) : undefined
   );
   return server;
 };
 
 const Server = () => {
-  const server = useServer(SERVER_ID);
+  const { serverID } = useParams();
+  const server = useServer(serverID);
   const [currentChannel, setCurrentChannel] = useState<Channel | undefined>(
     undefined
   );
