@@ -6,12 +6,14 @@ import {
   useQuery,
   useQueryClient,
 } from 'react-query';
+import { useParams } from 'react-router-dom';
 import { addMessage, fetchMessages } from '../../firestoreQueries';
-import { Channel, MessageContent, MessageData } from '../../types';
+import { MessageContent, MessageData } from '../../types';
 import MessageHistory from '../messages/MessageHistory';
 import MessageInput from '../messages/MessageInput';
 
 const useChannelMessages = (
+  userID: string,
   serverID: string | undefined,
   channelID: string | undefined
 ) => {
@@ -58,18 +60,12 @@ const useAddMessage = (
   });
 };
 
-const ChannelView = (props: {
-  userID: string;
-  serverID: string | undefined;
-  channel: Channel | undefined;
-}) => {
+const ChannelView = (props: { userID: string }) => {
+  const { serverID, channelID } = useParams();
+
   const queryClient = useQueryClient();
-  const messages = useChannelMessages(props.serverID, props.channel?.id);
-  const addMessageMutation = useAddMessage(
-    props.serverID,
-    props.channel?.id,
-    queryClient
-  );
+  const messages = useChannelMessages(props.userID, serverID, channelID);
+  const addMessageMutation = useAddMessage(serverID, channelID, queryClient);
 
   const submitMessage = (content: MessageContent) => {
     const message: MessageData = {

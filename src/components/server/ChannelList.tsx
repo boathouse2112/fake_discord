@@ -1,16 +1,13 @@
 import { Channel } from '../../types';
 import ChannelListElement from './ChannelListElement';
 
-const ChannelList = (props: {
-  channels: Channel[];
-  setCurrentChannel: (channel: Channel) => void;
-}) => {
+const ChannelList = (props: { serverID: string; channels: Channel[] }) => {
   const drawChannels = () => {
     return props.channels.map((channel) => (
       <ChannelListElement
         key={channel.id}
+        serverID={props.serverID}
         channel={channel}
-        setCurrentChannel={props.setCurrentChannel}
       />
     ));
   };

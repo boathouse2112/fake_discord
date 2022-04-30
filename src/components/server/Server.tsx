@@ -1,14 +1,10 @@
-import { useState } from 'react';
 import { useQuery } from 'react-query';
-import { useParams } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router-dom';
 import { fetchServer } from '../../firestoreQueries';
-import { Channel, ServerData } from '../../types';
-import ChannelView from '../server/ChannelView';
+import { ServerData } from '../../types';
 import ChannelList from './ChannelList';
+import ChannelView from './ChannelView';
 import ServerHeader from './ServerHeader';
-
-// Temporary server id
-const USER_ID = 'HHpwr6hXRpEg5loOSmWP';
 
 const useServer = (serverID: string | undefined): ServerData | undefined => {
   const { data: server } = useQuery(['server', serverID], () =>
@@ -17,31 +13,41 @@ const useServer = (serverID: string | undefined): ServerData | undefined => {
   return server;
 };
 
-const Server = () => {
-  const { serverID } = useParams();
+const Server = (props: { userID: string }) => {
+  const { serverID, channelID: currentChannelID } = useParams();
   const server = useServer(serverID);
-  const [currentChannel, setCurrentChannel] = useState<Channel | undefined>(
-    undefined
-  );
+
+  const currentChannelName = (() => {
+    if (currentChannelID === undefined) return undefined;
+
+    return server?.channels.find((channel) => channel.id === currentChannelID)
+      ?.name;
+  })();
 
   return (
-    <div className="w-full flex flex-col">
-      <ServerHeader
-        serverName={server?.name}
-        channelName={currentChannel?.name}
-      />
-      <div className="h-full flex">
-        <ChannelList
-          channels={server?.channels ?? []}
-          setCurrentChannel={setCurrentChannel}
-        />
-        <ChannelView
-          userID={USER_ID}
-          serverID={server?.id}
-          channel={currentChannel}
-        />
-      </div>
-    </div>
+    <>
+      {serverID ? (
+        <div className="w-full flex flex-col">
+          <ServerHeader
+            serverName={server?.name}
+            channelName={currentChannelName}
+          />
+          <div className="h-full flex">
+            <ChannelList
+              serverID={serverID}
+              channels={server?.channels ?? []}
+            />
+            {
+              // If this is the root server page, without any channel, render an empty ChannelView
+              currentChannelID === undefined ? (
+                <ChannelView userID={props.userID} />
+              ) : undefined
+            }
+            <Outlet />
+          </div>
+        </div>
+      ) : undefined}
+    </>
   );
 };
 

@@ -1,9 +1,9 @@
 import Server from '../components/server/Server';
 
-const ServerView = () => {
+const ServerView = (props: { userID: string }) => {
   return (
     <>
-      <Server />
+      <Server userID={props.userID} />
     </>
   );
 };
