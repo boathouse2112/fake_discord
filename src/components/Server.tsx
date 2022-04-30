@@ -8,6 +8,7 @@ import ServerHeader from './ServerHeader';
 
 // Temporary server id
 const SERVER_ID = 'serverA';
+const USER_ID = 'HHpwr6hXRpEg5loOSmWP';
 
 const useServer = (serverID: string): ServerData | undefined => {
   const { data: server } = useQuery(['server', serverID], () =>
@@ -33,7 +34,11 @@ const Server = () => {
           channels={server?.channels ?? []}
           setCurrentChannel={setCurrentChannel}
         />
-        <ChannelView />
+        <ChannelView
+          userID={USER_ID}
+          serverID={server?.id}
+          channel={currentChannel}
+        />
       </div>
     </div>
   );

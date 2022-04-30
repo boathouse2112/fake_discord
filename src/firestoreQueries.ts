@@ -139,6 +139,37 @@ const parseMessageData = (
   };
 };
 
+/**
+ * Fetch all messages from the Messages collection at the given path
+ * Add the given message to the Messages collection at the given path
+ * @param messagesPath Path to the Messages collection to add to.
+ * eg. ['Converstaions', 'conversationID', 'Messages']
+ */
+const fetchMessages = async (
+  messagesPath: string[]
+): Promise<MessageData[]> => {
+  const messagesCollectionRef = collection(
+    firestore,
+    messagesPath[0],
+    ...messagesPath.slice(1)
+  );
+
+  // Get messages sorted oldest-first
+  const querySortOldestToNewest = await query(
+    messagesCollectionRef,
+    orderBy('time', 'asc')
+  );
+  const messagesCollectionSnap = await getDocs(querySortOldestToNewest);
+
+  // Convert each FirestoreMessage to a MessageData object
+  const messages = messagesCollectionSnap.docs.map((docSnap) => {
+    const firestoreMessage = FirestoreMessageSchema.parse(docSnap.data());
+    return parseMessageData(firestoreMessage, docSnap.id);
+  });
+
+  return messages;
+};
+
 const FirestoreConversationSchema = z.object({
   participants: z.string().array(),
 });
@@ -156,26 +187,11 @@ const fetchConversation = async (
   }
 
   const conversationData = FirestoreConversationSchema.parse(docSnap.data());
-
-  const messagesCollectionRef = collection(
-    firestore,
+  const messages = await fetchMessages([
     'Conversations',
     conversationID,
-    'Messages'
-  );
-
-  // Get messages sorted oldest-first
-  const querySortOldestToNewest = await query(
-    messagesCollectionRef,
-    orderBy('time', 'asc')
-  );
-  const messagesCollectionSnap = await getDocs(querySortOldestToNewest);
-
-  // Convert each FirestoreMessage to a MessageData object
-  const messages = messagesCollectionSnap.docs.map((docSnap) => {
-    const firestoreMessage = FirestoreMessageSchema.parse(docSnap.data());
-    return parseMessageData(firestoreMessage, docSnap.id);
-  });
+    'Messages',
+  ]);
 
   const conversation: Conversation = {
     ...conversationData,
@@ -195,8 +211,12 @@ type SubmittedFirestoreMessage = z.infer<
   typeof SubmittedFirestoreMessageSchema
 >;
 
-// Add the given message to the conversation with the given ID
-const addMessage = (conversationID: string, message: MessageData) => {
+/**
+ * Add the given message to the Messages collection at the given path
+ * @param messagesPath Path to the Messages collection to add to.
+ * eg. ['Converstaions', 'conversationID', 'Messages']
+ */
+const addMessage = (messagesPath: string[], message: MessageData) => {
   const messageID = message.id;
 
   // Convert message.content to a string, and convert message.time to server timestamp
@@ -210,12 +230,12 @@ const addMessage = (conversationID: string, message: MessageData) => {
     content: message.content,
   };
 
+  // doc() function needs a string path element, before it'll accept the varargs for the rest of the path elements
+  const messageRefPath = [...messagesPath, messageID];
   const messageRef = doc(
     firestore,
-    'Conversations',
-    conversationID,
-    'Messages',
-    messageID
+    messagesPath[0],
+    ...messageRefPath.slice(1)
   );
 
   setDoc(messageRef, firestoreMessage);
@@ -224,6 +244,7 @@ const addMessage = (conversationID: string, message: MessageData) => {
 export {
   fetchUser,
   fetchConversationParticipants,
+  fetchMessages,
   fetchConversation,
   addMessage,
   fetchServer,

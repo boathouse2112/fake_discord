@@ -1,11 +1,11 @@
 import dayjs from 'dayjs';
+import { nanoid } from 'nanoid';
 import {
   QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
 } from 'react-query';
-import { v4 as uuid } from 'uuid';
 import { addMessage, fetchConversation } from '../firestoreQueries';
 import { MessageContent, MessageData } from '../types';
 import MessageHistory from './MessageHistory';
@@ -33,7 +33,8 @@ const useAddMessage = (
       if (conversationID === undefined) {
         reject('conversationID is undefined');
       } else {
-        resolve(addMessage(conversationID, message));
+        const messagesPath = ['Conversations', conversationID, 'Messages'];
+        resolve(addMessage(messagesPath, message));
       }
     });
   };
@@ -55,7 +56,7 @@ const MessageView = (props: {
 
   const submitMessage = (content: MessageContent) => {
     const message: MessageData = {
-      id: uuid(),
+      id: nanoid(),
       authorID: props.userID,
       time: dayjs(),
       content,
