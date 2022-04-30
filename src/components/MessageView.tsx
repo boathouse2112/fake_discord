@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from 'react-query';
 import { v4 as uuid } from 'uuid';
-import { addMessage, fetchConversation } from '../firebaseQueries';
+import { addMessage, fetchConversation } from '../firestoreQueries';
 import { MessageContent, MessageData } from '../types';
 import MessageHistory from './MessageHistory';
 import MessageInput from './MessageInput';

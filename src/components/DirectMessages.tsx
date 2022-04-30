@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
-import { fetchConversationParticipants, fetchUser } from '../firebaseQueries';
+import { fetchConversationParticipants, fetchUser } from '../firestoreQueries';
 import { User } from '../types';
 import InterlocutorList from './InterlocutorList';
 import MessageView from './MessageView';
@@ -30,7 +30,7 @@ const useConversationParticipants = (conversationIDs: string[] | undefined) => {
 const DirectMessages = (props: { user: string }) => {
   const user = useUser(USER_ID);
   const conversationParticipants = useConversationParticipants(
-    user?.directMessageIDs
+    user?.conversationIDs
   );
 
   const [currentInterlocutorID, setCurrentInterlocutorID] = useState<

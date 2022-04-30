@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { fetchUser } from './firebaseQueries';
+import { fetchUser } from './firestoreQueries';
 import defaultAvatar from './resources/discord_avatar.png';
 
 const useAvatar = (avatarFileName: string) => {

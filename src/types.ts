@@ -6,7 +6,7 @@ const UserSchema = z.object({
   id: z.string(),
   name: z.string(),
   interlocutorIDs: z.string().array(), // IDs of interlocutors
-  directMessageIDs: z.string().array(), // IDs of direct messages
+  conversationIDs: z.string().array(), // IDs of conversations
 });
 type User = z.infer<typeof UserSchema>;
 
@@ -42,4 +42,4 @@ const ConversationSchema = z.object({
 type Conversation = z.infer<typeof ConversationSchema>;
 
 export type { User, TextContent, MessageContent, MessageData, Conversation };
-export { UserSchema, ConversationSchema };
+export { UserSchema, MessageContentSchema };
