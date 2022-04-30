@@ -79,7 +79,7 @@ type FirestoreMessage = z.infer<typeof FirestoreMessageSchema>;
 
 // Convert a FirestoreTimestamp to a Dayjs time
 const parseDayjs = (firestoreTimestamp: FirestoreTimestamp): Dayjs =>
-  dayjs(firestoreTimestamp.seconds);
+  dayjs.unix(firestoreTimestamp.seconds);
 
 // Convert a FirestoreMessage to a MessageData object
 const parseMessageData = (
