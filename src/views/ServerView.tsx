@@ -9,7 +9,7 @@ const ServerView = (props: { userID: string }) => {
   const location = useLocation();
 
   // Redirect logged-out users to the login page
-  if (authUser.isLoading || authUser.isError) {
+  if (authUser.isError) {
     return (
       <Navigate
         replace
