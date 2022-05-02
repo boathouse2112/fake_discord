@@ -15,19 +15,18 @@ import MessageHistory from '../messages/MessageHistory';
 import MessageInput from '../messages/MessageInput';
 
 const useChannelMessages = (
-  userID: string | undefined,
   serverID: string | undefined,
   channelID: string | undefined
 ) => {
   const queryFn = () =>
-    userID === undefined || serverID === undefined || channelID === undefined
+    serverID === undefined || channelID === undefined
       ? undefined
       : fetchMessages(['Servers', serverID, 'Channels', channelID, 'Messages']);
 
   const { data: messages } = useQuery(
-    ['channel-messages', channelID],
+    ['channel-messages', serverID, channelID],
     queryFn,
-    { enabled: !!channelID }
+    { enabled: !!serverID && !!channelID }
   );
 
   return messages;
@@ -57,7 +56,7 @@ const useAddMessage = (
 
   return useMutation(mutationFn, {
     onSuccess: () => {
-      queryClient.invalidateQueries(['channel-messages', channelID]);
+      queryClient.invalidateQueries(['channel-messages', serverID, channelID]);
     },
   });
 };
@@ -69,7 +68,7 @@ const ChannelView = () => {
   const userID = authUser?.data?.uid;
 
   const queryClient = useQueryClient();
-  const messages = useChannelMessages(userID, serverID, channelID);
+  const messages = useChannelMessages(serverID, channelID);
   const addMessageMutation = useAddMessage(serverID, channelID, queryClient);
 
   const submitMessage = (content: MessageContent) => {
