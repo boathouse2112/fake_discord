@@ -12,8 +12,9 @@ import {
   serverTimestamp,
   setDoc,
 } from 'firebase/firestore';
+import { getBlob, ref } from 'firebase/storage';
 import { z } from 'zod';
-import { firestore } from './firebase';
+import { firestore, storage } from './firebase';
 import {
   Channel,
   ChannelSchema,
@@ -223,6 +224,19 @@ type SubmittedFirestoreMessage = z.infer<
 >;
 
 /**
+ * Download the image with the given source from cloud storage
+ * @param imagePath Cloud storage child path of the image
+ * @returns Object URL pointing to the downloaded image
+ */
+const downloadImage = async (imagePath: string): Promise<string> => {
+  const pathRef = ref(storage, imagePath);
+  // Get a blob, give it a URL, and return both
+  const imageBlob = await getBlob(pathRef);
+  const url = URL.createObjectURL(imageBlob);
+  return url;
+};
+
+/**
  * Add the given message to the Messages collection at the given path
  * @param messagesPath Path to the Messages collection to add to.
  * eg. ['Converstaions', 'conversationID', 'Messages']
@@ -259,5 +273,6 @@ export {
   fetchConversation,
   addMessage,
   fetchServer,
+  downloadImage,
   fetchServerNames,
 };

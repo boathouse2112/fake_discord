@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
-import { useAvatar, useUserName } from '../../hooks';
+import { useUserName } from '../../hooks';
 import { MessageData } from '../../types';
+import Avatar from '../user/Avatar';
 import UserName from '../user/UserName';
 import Message from './Message';
 
@@ -12,7 +13,6 @@ type MessageGroupProps = {
 };
 
 const MessageGroup = (props: MessageGroupProps) => {
-  const avatar = useAvatar('user_avatar.png');
   const authorName = useUserName(props.authorID);
 
   const drawMessages = () => {
@@ -23,13 +23,7 @@ const MessageGroup = (props: MessageGroupProps) => {
 
   return (
     <div className="p-6 flex flex-row gap-2">
-      <div className="w-10 py-2">
-        <img
-          src={avatar}
-          alt={`${authorName ?? ''} avatar`}
-          className="rounded-full"
-        />
-      </div>
+      <Avatar userID={props.authorID} />
       <div className="flex flex-col text-white">
         <div className="flex flex-row">
           {authorName === undefined ? undefined : (

@@ -2,23 +2,10 @@ import { useAuthUser } from '@react-query-firebase/auth';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { auth } from '../../firebase';
-import {
-  fetchConversationParticipants,
-  fetchUser,
-} from '../../firestoreQueries';
-import { User } from '../../types';
+import { fetchConversationParticipants } from '../../firestoreQueries';
+import { useUser } from '../../hooks';
 import MessageView from '../messages/MessageView';
 import InterlocutorList from './InterlocutorList';
-
-// Gets the user with the given ID
-const useUser = (userID: string | undefined): User | undefined => {
-  const { data: user } = useQuery(
-    ['user', userID],
-    () => (userID !== undefined ? fetchUser(userID) : undefined),
-    { enabled: !!userID }
-  );
-  return user;
-};
 
 const useConversationParticipants = (conversationIDs: string[] | undefined) => {
   const { data: participants } = useQuery(
@@ -38,7 +25,7 @@ const DirectMessages = (props: { user: string }) => {
   const authUser = useAuthUser('auth-user', auth);
   const userID = authUser?.data?.uid;
 
-  const user = useUser(userID);
+  const { data: user } = useUser(userID);
   const conversationParticipants = useConversationParticipants(
     user?.conversationIDs
   );

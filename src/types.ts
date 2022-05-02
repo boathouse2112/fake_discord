@@ -5,6 +5,7 @@ import { z } from 'zod';
 const UserSchema = z.object({
   id: z.string(),
   name: z.string(),
+  avatarPath: z.string(),
   interlocutorIDs: z.string().array(), // IDs of interlocutors
   conversationIDs: z.string().array(), // IDs of conversations
 });

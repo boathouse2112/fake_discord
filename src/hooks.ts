@@ -1,19 +1,23 @@
-import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
-import { fetchUser } from './firestoreQueries';
-import defaultAvatar from './resources/user_avatar.png';
+import { useQuery, UseQueryResult } from 'react-query';
+import { downloadImage, fetchUser } from './firestoreQueries';
+import { User } from './types';
 
-const useAvatar = (avatarFileName: string) => {
-  const [avatar, setAvatar] = useState(defaultAvatar);
+// Download the avatar from firebase
+const useAvatar = (avatarPath: string | undefined) => {
+  return useQuery(
+    ['avatar', avatarPath],
+    () => (avatarPath === undefined ? undefined : downloadImage(avatarPath)),
+    { enabled: !!avatarPath }
+  );
+};
 
-  useEffect(() => {
-    import(`./resources/${avatarFileName}`).then((module) => {
-      console.log('avatar');
-      setAvatar(module.default);
-    });
-  }, [avatarFileName]);
-
-  return avatar;
+// Gets the user with the given ID
+const useUser = (userID: string | undefined): UseQueryResult<User> => {
+  return useQuery(
+    ['user', userID],
+    () => (userID !== undefined ? fetchUser(userID) : undefined),
+    { enabled: !!userID }
+  );
 };
 
 // Convert a user ID to a user name.
@@ -24,4 +28,4 @@ const useUserName = (userID: string) => {
   return name;
 };
 
-export { useAvatar, useUserName };
+export { useAvatar, useUser, useUserName };

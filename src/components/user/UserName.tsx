@@ -14,7 +14,12 @@ const UserName = (props: { userName: string; userID: string }) => {
       </h1>
       {/* Add a relative element to trigger the flex-gap even when the user card isn't rendered */}
       <div className="relative w-0 h-0">
-        {userCardIsOpen && <UserCard setUserCardIsOpen={setUserCardIsOpen} />}
+        {userCardIsOpen && (
+          <UserCard
+            userID={props.userID}
+            setUserCardIsOpen={setUserCardIsOpen}
+          />
+        )}
       </div>
     </div>
   );
