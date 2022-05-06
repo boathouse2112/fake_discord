@@ -25,14 +25,14 @@ const Server = () => {
   })();
 
   return (
-    <>
+    <div className="w-full flex flex-col">
       {serverID ? (
-        <div className="w-full flex flex-col">
+        <>
           <ServerHeader
             serverName={server?.name}
             channelName={currentChannelName}
           />
-          <div className="h-full flex">
+          <div className="h-full overflow-hidden flex">
             <ChannelList
               serverID={serverID}
               channels={server?.channels ?? []}
@@ -43,9 +43,9 @@ const Server = () => {
             }
             <Outlet />
           </div>
-        </div>
+        </>
       ) : undefined}
-    </>
+    </div>
   );
 };
 

@@ -1,65 +1,13 @@
 import { useAuthUser } from '@react-query-firebase/auth';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from 'react-query';
+import { useQueryClient } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { auth } from '../../firebase';
-import { addMessage, fetchMessages } from '../../firestoreQueries';
 import { MessageContent, MessageData } from '../../types';
 import MessageHistory from '../messages/MessageHistory';
 import MessageInput from '../messages/MessageInput';
-
-const useChannelMessages = (
-  serverID: string | undefined,
-  channelID: string | undefined
-) => {
-  const queryFn = () =>
-    serverID === undefined || channelID === undefined
-      ? undefined
-      : fetchMessages(['Servers', serverID, 'Channels', channelID, 'Messages']);
-
-  const { data: messages } = useQuery(
-    ['channel-messages', serverID, channelID],
-    queryFn,
-    { enabled: !!serverID && !!channelID }
-  );
-
-  return messages;
-};
-
-const useAddMessage = (
-  serverID: string | undefined,
-  channelID: string | undefined,
-  queryClient: QueryClient
-) => {
-  const mutationFn = (message: MessageData) => {
-    return new Promise((resolve, reject) => {
-      if (serverID === undefined || channelID === undefined) {
-        reject('conversationID is undefined');
-      } else {
-        const messagesPath = [
-          'Servers',
-          serverID,
-          'Channels',
-          channelID,
-          'Messages',
-        ];
-        resolve(addMessage(messagesPath, message));
-      }
-    });
-  };
-
-  return useMutation(mutationFn, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['channel-messages', serverID, channelID]);
-    },
-  });
-};
+import { useAddMessage, useChannelMessages } from './hooks';
 
 const ChannelView = () => {
   const { serverID, channelID } = useParams();

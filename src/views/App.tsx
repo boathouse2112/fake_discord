@@ -16,16 +16,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <div className="h-screen w-screen flex">
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/@me" element={<Home />} />
-            <Route path="/:serverID" element={<ServerView userID={USER_ID} />}>
-              <Route path=":channelID" element={<ChannelView />} />
-            </Route>
-            <Route path="*" element={<Navigate to="/@me" replace />} />
-          </Routes>
-        </div>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/@me" element={<Home />} />
+          <Route path="/:serverID" element={<ServerView userID={USER_ID} />}>
+            <Route path=":channelID" element={<ChannelView />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/@me" replace />} />
+        </Routes>
       </BrowserRouter>
     </QueryClientProvider>
   );

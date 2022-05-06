@@ -20,10 +20,10 @@ const ServerView = (props: { userID: string }) => {
   }
 
   return (
-    <>
+    <div className="w-screen h-screen overflow-hidden flex">
       <ServerList />
       <Server />
-    </>
+    </div>
   );
 };
 

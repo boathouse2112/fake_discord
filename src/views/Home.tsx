@@ -20,10 +20,10 @@ const Home = () => {
   }
 
   return (
-    <>
+    <div className="w-screen h-screen flex">
       <ServerList />
       <DirectMessages user="Mark" />
-    </>
+    </div>
   );
 };
 
