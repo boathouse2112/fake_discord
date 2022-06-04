@@ -1,3 +1,8 @@
-import { initializeUser } from './initializeUser';
+import { initializeUser } from "./initializeUser";
+import { sendMessage } from "./conversation";
+import * as admin from "firebase-admin";
 
-export { initializeUser };
+admin.initializeApp();
+export const db = admin.firestore();
+
+export { initializeUser, sendMessage };

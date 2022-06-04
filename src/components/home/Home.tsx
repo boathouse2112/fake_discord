@@ -1,11 +1,11 @@
-import { useAuthUser } from '@react-query-firebase/auth';
-import { Navigate, useLocation } from 'react-router-dom';
-import DirectMessages from '../components/home/DirectMessages';
-import ServerList from '../components/server_list/ServerList';
-import { auth } from '../firebase';
+import { useAuthUser } from "@react-query-firebase/auth";
+import { Navigate, useLocation } from "react-router-dom";
+import DirectMessages from "./DirectMessages";
+import ServerList from "../server_list/ServerList";
+import { auth } from "../../firebase";
 
 const Home = () => {
-  const authUser = useAuthUser('auth-user', auth);
+  const authUser = useAuthUser("auth-user", auth);
   const location = useLocation();
 
   // Redirect logged-out users to the login page

@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { TextContent } from '../../types';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { TextContent } from "../../types";
 
 const UserCardInput = () => {
   const navigate = useNavigate();
 
-  const [state, setState] = useState('');
+  const [state, setState] = useState("");
 
   // On change, update message input state.
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -14,7 +14,7 @@ const UserCardInput = () => {
 
   // On (non-shift) enter, submit the input form.
   const onEnterPress = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
+    if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
       handleSubmit();
     }
@@ -22,10 +22,10 @@ const UserCardInput = () => {
 
   // On submit, redirect to
   const handleSubmit = () => {
-    const content: TextContent = { type: 'text', text: state };
+    const content: TextContent = { type: "text", text: state };
     // props.submitMessage(content);
 
-    setState('');
+    setState("");
   };
 
   return (

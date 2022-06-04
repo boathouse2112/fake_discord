@@ -1,9 +1,9 @@
-import dayjs from 'dayjs';
-import { useUserName } from '../../hooks';
-import { MessageData } from '../../types';
-import Avatar from '../user/Avatar';
-import NewUserCard from '../user/NewUserCard';
-import Message from './Message';
+import dayjs from "dayjs";
+import { useUserName } from "../../hooks";
+import { MessageData } from "../../types";
+import Avatar from "../user/Avatar";
+import Message from "./Message";
+import UserCard from "../user/UserCard";
 
 type MessageGroupProps = {
   id: string;
@@ -27,7 +27,7 @@ const MessageGroup = (props: MessageGroupProps) => {
       <div className="flex flex-col text-white">
         <div className="flex flex-row gap-2">
           {authorName === undefined ? undefined : (
-            <NewUserCard userID={props.authorID} userName={authorName} />
+            <UserCard userID={props.authorID} userName={authorName} />
           )}
           <h2>{props.time.fromNow()}</h2>
         </div>

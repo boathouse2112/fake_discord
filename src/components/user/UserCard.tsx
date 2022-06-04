@@ -1,18 +1,14 @@
-import FastAverageColor from 'fast-average-color';
-import { useEffect, useRef, useState } from 'react';
-import useOnClickOutside from 'use-onclickoutside';
-import { useAvatar, useUser } from '../../hooks';
+import { Float } from "@headlessui-float/react";
+import { Popover } from "@headlessui/react";
+import FastAverageColor from "fast-average-color";
+import { useEffect, useState } from "react";
+import { useAvatar, useUser } from "../../hooks";
+import Avatar from "./Avatar";
+import UserCardInput from "./UserCardInput";
 
-const UserCard = (props: {
-  userID: string;
-  setUserCardIsOpen: (value: boolean) => void;
-}) => {
+const UserCard = (props: { userName: string; userID: string }) => {
   const { data: user } = useUser(props.userID);
   const { data: avatarSrc } = useAvatar(user?.avatarPath);
-
-  // Close this card when the user clicks outside of it
-  const ref = useRef(null);
-  useOnClickOutside(ref, () => props.setUserCardIsOpen(false));
 
   const [avatarColor, setAvatarColor] = useState<string | undefined>(undefined);
 
@@ -27,17 +23,44 @@ const UserCard = (props: {
   }, [avatarSrc]);
 
   return (
-    <>
-      {avatarColor ? (
-        <div
-          ref={ref}
-          className="w-72 h-60 absolute rounded-md overflow-hidden bg-neutral-900"
-        >
-          <div className="h-16" style={{ backgroundColor: avatarColor }}></div>
-          <div className="h-44"></div>
-        </div>
-      ) : undefined}
-    </>
+    <Popover>
+      <Float strategy="fixed" placement="right-start" offset={8} shift={56}>
+        <Popover.Button>{props.userName}</Popover.Button>
+
+        <Popover.Panel>
+          <div className="w-72 rounded-md overflow-hidden bg-neutral-900">
+            <div
+              className="h-16"
+              style={{ backgroundColor: avatarColor ?? "white" }}
+            ></div>
+            {user ? (
+              <div className="relative h-10">
+                <div
+                  className={
+                    "absolute left-3 bottom-0 w-20 h-20 rounded-full" +
+                    " bg-neutral-900 flex justify-center items-center"
+                  }
+                >
+                  <Avatar userID={user.id} width={64} />
+                </div>
+              </div>
+            ) : undefined}
+            <div className="h-44 my-4 px-4">
+              <h1 className="text-xl font-bold tracking-wider">{user?.name}</h1>
+              <p className="mt-4  inline-block break-words overflow-hidden overflow-ellipsis">
+                Placeholder About
+                meeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+              </p>
+            </div>
+            <UserCardInput />
+          </div>
+        </Popover.Panel>
+      </Float>
+    </Popover>
   );
 };
 
