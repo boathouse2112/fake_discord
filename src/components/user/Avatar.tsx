@@ -1,10 +1,10 @@
-import { useAvatar, useUser } from '../../hooks';
+import { useAvatar, useUser } from "../../hooks";
 
 /**
  * The avatar of the given user
  */
-const Avatar = (props: { userID: string; width?: number }) => {
-  const { data: user } = useUser(props.userID);
+const Avatar = (props: { userId: string; width?: number }) => {
+  const { data: user } = useUser(props.userId);
   const { data: avatarSrc } = useAvatar(user?.avatarPath);
 
   return (
@@ -12,7 +12,7 @@ const Avatar = (props: { userID: string; width?: number }) => {
       {avatarSrc ? (
         <img
           src={avatarSrc}
-          alt={`${user?.name ?? ''} avatar`}
+          alt={`${user?.name ?? ""} avatar`}
           className="rounded-full"
         />
       ) : undefined}

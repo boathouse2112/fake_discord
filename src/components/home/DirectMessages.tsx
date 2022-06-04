@@ -1,57 +1,57 @@
-import { useAuthUser } from '@react-query-firebase/auth';
-import { useState } from 'react';
-import { useQuery } from 'react-query';
-import { auth } from '../../firebase';
-import { fetchConversationParticipants } from '../../firestoreQueries';
-import { useUser } from '../../hooks';
-import MessageView from '../messages/MessageView';
-import InterlocutorList from './InterlocutorList';
+import { useAuthUser } from "@react-query-firebase/auth";
+import { useState } from "react";
+import { useQuery } from "react-query";
+import { auth } from "../../firebase";
+import { fetchConversationParticipants } from "../../firestoreQueries";
+import { useUser } from "../../hooks";
+import MessageView from "../messages/MessageView";
+import InterlocutorList from "./InterlocutorList";
 
-const useConversationParticipants = (conversationIDs: string[] | undefined) => {
+const useConversationParticipants = (conversationIds: string[] | undefined) => {
   const { data: participants } = useQuery(
-    ['conversation-participants', conversationIDs],
+    ["conversation-participants", conversationIds],
     () =>
-      conversationIDs !== undefined
-        ? fetchConversationParticipants(conversationIDs)
+      conversationIds !== undefined
+        ? fetchConversationParticipants(conversationIds)
         : undefined,
-    { enabled: !!conversationIDs }
+    { enabled: !!conversationIds }
   );
 
   return participants;
 };
 
 // Handles DM state
-const DirectMessages = (props: { user: string }) => {
-  const authUser = useAuthUser('auth-user', auth);
-  const userID = authUser?.data?.uid;
+const DirectMessages = () => {
+  const authUser = useAuthUser("auth-user", auth);
+  const userId = authUser?.data?.uid;
 
-  const { data: user } = useUser(userID);
+  const { data: user } = useUser(userId);
   const conversationParticipants = useConversationParticipants(
-    user?.conversationIDs
+    user?.conversationIds
   );
 
-  const [currentInterlocutorID, setCurrentInterlocutorID] = useState<
+  const [currentInterlocutorId, setCurrentInterlocutorId] = useState<
     string | undefined
   >(undefined);
 
-  const interlocutorIDs = user?.interlocutorIDs;
+  const interlocutorIds = user?.interlocutorIds;
 
   // Filter the user's conversations to find the one with both the user and the currentInterlocutor
-  const currentConversationID = (() => {
+  const currentConversationId = (() => {
     if (
       conversationParticipants === undefined ||
       user === undefined ||
-      currentInterlocutorID === undefined
+      currentInterlocutorId === undefined
     ) {
       return undefined;
     }
 
-    for (const { conversationID, participants } of conversationParticipants) {
+    for (const { conversationId, participants } of conversationParticipants) {
       if (
         participants.includes(user.id) &&
-        participants.includes(currentInterlocutorID)
+        participants.includes(currentInterlocutorId)
       ) {
-        return conversationID;
+        return conversationId;
       }
     }
 
@@ -61,10 +61,10 @@ const DirectMessages = (props: { user: string }) => {
   return (
     <div className="w-full flex">
       <InterlocutorList
-        interlocutorIDs={interlocutorIDs ?? []}
-        setCurrentInterlocutorID={setCurrentInterlocutorID}
+        interlocutorIds={interlocutorIds ?? []}
+        setCurrentInterlocutorId={setCurrentInterlocutorId}
       />
-      <MessageView conversationID={currentConversationID} />
+      <MessageView conversationId={currentConversationId} />
     </div>
   );
 };

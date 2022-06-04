@@ -1,32 +1,32 @@
-import { useQuery } from 'react-query';
-import { Outlet, useParams } from 'react-router-dom';
-import { fetchServer } from '../../firestoreQueries';
-import { ServerData } from '../../types';
-import ChannelList from './ChannelList';
-import ChannelView from './ChannelView';
-import ServerHeader from './ServerHeader';
+import { useQuery } from "react-query";
+import { Outlet, useParams } from "react-router-dom";
+import { fetchServer } from "../../firestoreQueries";
+import { ServerData } from "../../types";
+import ChannelList from "./ChannelList";
+import ChannelView from "./ChannelView";
+import ServerHeader from "./ServerHeader";
 
-const useServer = (serverID: string | undefined): ServerData | undefined => {
-  const { data: server } = useQuery(['server', serverID], () =>
-    serverID ? fetchServer(serverID) : undefined
+const useServer = (serverId: string | undefined): ServerData | undefined => {
+  const { data: server } = useQuery(["server", serverId], () =>
+    serverId ? fetchServer(serverId) : undefined
   );
   return server;
 };
 
 const Server = () => {
-  const { serverID, channelID: currentChannelID } = useParams();
-  const server = useServer(serverID);
+  const { serverId, channelId: currentChannelId } = useParams();
+  const server = useServer(serverId);
 
   const currentChannelName = (() => {
-    if (currentChannelID === undefined) return undefined;
+    if (currentChannelId === undefined) return undefined;
 
-    return server?.channels.find((channel) => channel.id === currentChannelID)
+    return server?.channels.find((channel) => channel.id === currentChannelId)
       ?.name;
   })();
 
   return (
     <div className="w-full flex flex-col">
-      {serverID ? (
+      {serverId ? (
         <>
           <ServerHeader
             serverName={server?.name}
@@ -34,12 +34,12 @@ const Server = () => {
           />
           <div className="h-full overflow-hidden flex">
             <ChannelList
-              serverID={serverID}
+              serverId={serverId}
               channels={server?.channels ?? []}
             />
             {
               // If this is the root server page, without any channel, render an empty ChannelView
-              currentChannelID === undefined ? <ChannelView /> : undefined
+              currentChannelId === undefined ? <ChannelView /> : undefined
             }
             <Outlet />
           </div>

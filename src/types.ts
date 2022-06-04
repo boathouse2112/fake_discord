@@ -1,27 +1,27 @@
-import { Dayjs } from 'dayjs';
-import { z } from 'zod';
+import { Dayjs } from "dayjs";
+import { z } from "zod";
 
 // Represents a user
 const UserSchema = z.object({
   id: z.string(),
   name: z.string(),
   avatarPath: z.string(),
-  interlocutorIDs: z.string().array(), // IDs of interlocutors
-  conversationIDs: z.string().array(), // IDs of conversations
+  interlocutorIds: z.string().array(), // IDs of interlocutors
+  conversationIds: z.string().array(), // IDs of conversations
 });
 type User = z.infer<typeof UserSchema>;
 
 // Message content types
 // Tagged union, can switch on `type` field.
 const TextContentSchema = z.object({
-  type: z.literal('text'),
+  type: z.literal("text"),
   text: z.string(),
 });
 type TextContent = z.infer<typeof TextContentSchema>;
 
-const MessageContentSchema = z.discriminatedUnion('type', [
+const MessageContentSchema = z.discriminatedUnion("type", [
   TextContentSchema,
-  z.object({ type: z.literal('none') }),
+  z.object({ type: z.literal("none") }),
 ]);
 type MessageContent = z.infer<typeof MessageContentSchema>;
 
@@ -30,7 +30,7 @@ const zDayjs: z.ZodType<Dayjs> = z.any(); // Let Zod accept a Dayjs object witho
 // Abstract message model type. Converted to message view props.
 const MessageDataSchema = z.object({
   id: z.string(),
-  authorID: z.string(),
+  authorId: z.string(),
   time: zDayjs,
   content: MessageContentSchema,
 });
@@ -56,7 +56,7 @@ type Channel = z.infer<typeof ChannelSchema>;
 const ServerDataSchema = z.object({
   id: z.string(),
   name: z.string(),
-  memberIDs: z.string().array(),
+  memberIds: z.string().array(),
   channels: ChannelSchema.array(),
 });
 type ServerData = z.infer<typeof ServerDataSchema>;

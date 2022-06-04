@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // I want to infer types for all schemas, even if the types aren't used.
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from "dayjs";
 import {
   collection,
   doc,
@@ -11,10 +11,10 @@ import {
   query,
   serverTimestamp,
   setDoc,
-} from 'firebase/firestore';
-import { getBlob, ref } from 'firebase/storage';
-import { z } from 'zod';
-import { firestore, storage } from './firebase';
+} from "firebase/firestore";
+import { getBlob, ref } from "firebase/storage";
+import { z } from "zod";
+import { firestore, storage } from "./firebase";
 import {
   Channel,
   ChannelSchema,
@@ -25,18 +25,18 @@ import {
   ServerDataSchema,
   User,
   UserSchema,
-} from './types';
+} from "./types";
 
 const FirestoreUserSchema = UserSchema.omit({ id: true });
 type FirestoreUser = z.infer<typeof FirestoreUserSchema>;
 
 // Fetch the user with the given ID
-const fetchUser = async (userID: string): Promise<User> => {
-  const docRef = doc(firestore, 'Users', userID);
+const fetchUser = async (userId: string): Promise<User> => {
+  const docRef = doc(firestore, "Users", userId);
   const docSnap = await getDoc(docRef);
 
   if (!docSnap.exists()) {
-    throw Error(`No document found: Users/${userID}`);
+    throw Error(`No document found: Users/${userId}`);
   }
 
   const userData = FirestoreUserSchema.parse(docSnap.data());
@@ -51,15 +51,14 @@ const FirestoreChannelSchema = ChannelSchema.omit({
 type FirestoreChannel = z.infer<typeof FirestoreChannelSchema>;
 
 // Fetch all channels in the server with the given ID
-const fetchChannels = async (serverID: string): Promise<Channel[]> => {
-  const collectionRef = collection(firestore, 'Servers', serverID, 'Channels');
+const fetchChannels = async (serverId: string): Promise<Channel[]> => {
+  const collectionRef = collection(firestore, "Servers", serverId, "Channels");
   const querySnap = await getDocs(collectionRef);
 
-  const channels = querySnap.docs.map((doc) => {
+  return querySnap.docs.map((doc) => {
     const firestoreChannel = FirestoreChannelSchema.parse(doc.data());
     return { ...firestoreChannel, id: doc.id };
   });
-  return channels;
 };
 
 const FirestoreServerSchema = ServerDataSchema.omit({
@@ -69,55 +68,54 @@ const FirestoreServerSchema = ServerDataSchema.omit({
 type FirestoreServer = z.infer<typeof FirestoreServerSchema>;
 
 // Fetch the server with the given ID
-const fetchServer = async (serverID: string): Promise<ServerData> => {
+const fetchServer = async (serverId: string): Promise<ServerData> => {
   // First fetch
-  const docRef = doc(firestore, 'Servers', serverID);
+  const docRef = doc(firestore, "Servers", serverId);
   const docSnap = await getDoc(docRef);
 
   if (!docSnap.exists()) {
-    throw Error(`No document found: Servers/${serverID}`);
+    throw Error(`No document found: Servers/${serverId}`);
   }
 
   const serverData = FirestoreServerSchema.parse(docSnap.data());
-  const channels = await fetchChannels(serverID);
+  const channels = await fetchChannels(serverId);
 
-  return { ...serverData, channels, id: serverID };
+  return { ...serverData, channels, id: serverId };
 };
 
 const fetchServerNames = async (): Promise<{ id: string; name: string }[]> => {
-  const collectionRef = collection(firestore, 'Servers');
+  const collectionRef = collection(firestore, "Servers");
   const querySnap = await getDocs(collectionRef);
 
-  const serverNames = querySnap.docs.map((doc) => {
+  return querySnap.docs.map((doc) => {
     const firestoreServer = FirestoreServerSchema.parse(doc.data());
     return { id: doc.id, name: firestoreServer.name };
   });
-  return serverNames;
 };
 
 // Get a list of participants of the given conversation
 const fetchSingleConversationParticipants = async (
-  conversationID: string
-): Promise<{ conversationID: string; participants: string[] }> => {
-  const docRef = doc(firestore, 'Conversations', conversationID);
+  conversationId: string
+): Promise<{ conversationId: string; participants: string[] }> => {
+  const docRef = doc(firestore, "Conversations", conversationId);
   const docSnap = await getDoc(docRef);
 
   if (!docSnap.exists()) {
-    throw Error(`No document found: Conversations/${conversationID}`);
+    throw Error(`No document found: Conversations/${conversationId}`);
   }
 
   const StringArraySchema = z.string().array();
-  const participants = StringArraySchema.parse(docSnap.get('participants'));
+  const participants = StringArraySchema.parse(docSnap.get("participants"));
 
-  return { conversationID, participants };
+  return { conversationId, participants };
 };
 
 // Get a list of participants for each of the given conversations
 const fetchConversationParticipants = async (
-  conversationIDs: string[]
-): Promise<{ conversationID: string; participants: string[] }[]> => {
+  conversationIds: string[]
+): Promise<{ conversationId: string; participants: string[] }[]> => {
   return Promise.all(
-    conversationIDs.map((id) => fetchSingleConversationParticipants(id))
+    conversationIds.map((id) => fetchSingleConversationParticipants(id))
   );
 };
 
@@ -127,7 +125,7 @@ const FirestoreTimestampSchema = z.object({
 type FirestoreTimestamp = z.infer<typeof FirestoreTimestampSchema>;
 
 const FirestoreMessageSchema = z.object({
-  authorID: z.string(),
+  authorId: z.string(),
   time: FirestoreTimestampSchema,
   content: MessageContentSchema,
 });
@@ -140,13 +138,13 @@ const parseDayjs = (firestoreTimestamp: FirestoreTimestamp): Dayjs =>
 // Convert a FirestoreMessage to a MessageData object
 const parseMessageData = (
   firestoreMessage: FirestoreMessage,
-  messageID: string
+  messageId: string
 ): MessageData => {
   // Get a Dayjs time, and add the message ID
   const time = parseDayjs(firestoreMessage.time);
   return {
     ...firestoreMessage,
-    id: messageID,
+    id: messageId,
     time,
   };
 };
@@ -169,17 +167,15 @@ const fetchMessages = async (
   // Get messages sorted oldest-first
   const querySortOldestToNewest = await query(
     messagesCollectionRef,
-    orderBy('time', 'asc')
+    orderBy("time", "asc")
   );
   const messagesCollectionSnap = await getDocs(querySortOldestToNewest);
 
   // Convert each FirestoreMessage to a MessageData object
-  const messages = messagesCollectionSnap.docs.map((docSnap) => {
+  return messagesCollectionSnap.docs.map((docSnap) => {
     const firestoreMessage = FirestoreMessageSchema.parse(docSnap.data());
     return parseMessageData(firestoreMessage, docSnap.id);
   });
-
-  return messages;
 };
 
 const FirestoreConversationSchema = z.object({
@@ -189,28 +185,26 @@ type FirestoreConversation = z.infer<typeof FirestoreConversationSchema>;
 
 // Fetch the conversation with the given ID
 const fetchConversation = async (
-  conversationID: string
+  conversationId: string
 ): Promise<Conversation> => {
-  const docRef = doc(firestore, 'Conversations', conversationID);
+  const docRef = doc(firestore, "Conversations", conversationId);
   const docSnap = await getDoc(docRef);
 
   if (!docSnap.exists()) {
-    throw Error(`No document found: Conversations/${conversationID}`);
+    throw Error(`No document found: Conversations/${conversationId}`);
   }
 
   const conversationData = FirestoreConversationSchema.parse(docSnap.data());
   const messages = await fetchMessages([
-    'Conversations',
-    conversationID,
-    'Messages',
+    "Conversations",
+    conversationId,
+    "Messages",
   ]);
 
-  const conversation: Conversation = {
+  return {
     ...conversationData,
     messages,
   };
-
-  return conversation;
 };
 
 // Submitted firestore messages have the serverTimestamp() placeholder value,
@@ -232,31 +226,31 @@ const downloadImage = async (imagePath: string): Promise<string> => {
   const pathRef = ref(storage, imagePath);
   // Get a blob, give it a URL, and return both
   const imageBlob = await getBlob(pathRef);
-  const url = URL.createObjectURL(imageBlob);
-  return url;
+  return URL.createObjectURL(imageBlob);
 };
 
 /**
  * Add the given message to the Messages collection at the given path
  * @param messagesPath Path to the Messages collection to add to.
  * eg. ['Converstaions', 'conversationID', 'Messages']
+ * @param message
  */
 const addMessage = (messagesPath: string[], message: MessageData) => {
-  const messageID = message.id;
+  const messageId = message.id;
 
   // Convert message.content to a string, and convert message.time to server timestamp
-  if (message.content.type !== 'text') {
+  if (message.content.type !== "text") {
     return;
   }
 
   const firestoreMessage: SubmittedFirestoreMessage = {
-    authorID: message.authorID,
+    authorId: message.authorId,
     time: serverTimestamp(),
     content: message.content,
   };
 
   // doc() function needs a string path element, before it'll accept the varargs for the rest of the path elements
-  const messageRefPath = [...messagesPath, messageID];
+  const messageRefPath = [...messagesPath, messageId];
   const messageRef = doc(
     firestore,
     messagesPath[0],

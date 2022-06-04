@@ -6,8 +6,8 @@ import { useAvatar, useUser } from "../../hooks";
 import Avatar from "./Avatar";
 import UserCardInput from "./UserCardInput";
 
-const UserCard = (props: { userName: string; userID: string }) => {
-  const { data: user } = useUser(props.userID);
+const UserCard = (props: { userName: string; userId: string }) => {
+  const { data: user } = useUser(props.userId);
   const { data: avatarSrc } = useAvatar(user?.avatarPath);
 
   const [avatarColor, setAvatarColor] = useState<string | undefined>(undefined);
@@ -41,7 +41,7 @@ const UserCard = (props: { userName: string; userID: string }) => {
                     " bg-neutral-900 flex justify-center items-center"
                   }
                 >
-                  <Avatar userID={user.id} width={64} />
+                  <Avatar userId={user.id} width={64} />
                 </div>
               </div>
             ) : undefined}

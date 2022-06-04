@@ -1,5 +1,5 @@
-import { MessageData } from '../../types';
-import MessageGroup, { MessageGroupProps } from './MessageGroup';
+import { MessageData } from "../../types";
+import MessageGroup, { MessageGroupProps } from "./MessageGroup";
 
 // Group model message data into MessageGroup view props.
 const groupMessages = (messages: MessageData[]): MessageGroupProps[] => {
@@ -16,7 +16,7 @@ const groupMessages = (messages: MessageData[]): MessageGroupProps[] => {
   // Create an initial message group out of the first message.
   let currentMessageGroup: MessageGroupProps = {
     id: firstMessage.id,
-    authorID: firstMessage.authorID,
+    authorId: firstMessage.authorId,
     time: firstMessage.time,
     messages: [firstMessage],
   };
@@ -26,7 +26,7 @@ const groupMessages = (messages: MessageData[]): MessageGroupProps[] => {
     messageGroups.push(currentMessageGroup);
     currentMessageGroup = {
       id: message.id,
-      authorID: message.authorID,
+      authorId: message.authorId,
       time: message.time,
       messages: [message],
     };
@@ -40,7 +40,7 @@ const groupMessages = (messages: MessageData[]): MessageGroupProps[] => {
   // For each remaining message, if the author is the same as the current message group, update the group.
   // Else, start a new message group.
   remainingMessages.forEach((message) => {
-    if (message.authorID === currentMessageGroup.authorID) {
+    if (message.authorId === currentMessageGroup.authorId) {
       updateMessageGroup(message);
     } else {
       startMessageGroup(message);

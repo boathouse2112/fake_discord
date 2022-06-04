@@ -4,7 +4,7 @@ import Server from "./Server";
 import ServerList from "../server_list/ServerList";
 import { auth } from "../../firebase";
 
-const ServerView = (props: { userID: string }) => {
+const ServerView = (props: { userId: string }) => {
   const authUser = useAuthUser("auth-user", auth);
   const location = useLocation();
 

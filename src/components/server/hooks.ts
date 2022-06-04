@@ -1,41 +1,41 @@
-import { QueryClient, useMutation, useQuery } from 'react-query';
-import { addMessage, fetchMessages } from '../../firestoreQueries';
-import { MessageData } from '../../types';
+import { QueryClient, useMutation, useQuery } from "react-query";
+import { addMessage, fetchMessages } from "../../firestoreQueries";
+import { MessageData } from "../../types";
 
 const useChannelMessages = (
-  serverID: string | undefined,
-  channelID: string | undefined
+  serverId: string | undefined,
+  channelId: string | undefined
 ) => {
   const queryFn = () =>
-    serverID === undefined || channelID === undefined
+    serverId === undefined || channelId === undefined
       ? undefined
-      : fetchMessages(['Servers', serverID, 'Channels', channelID, 'Messages']);
+      : fetchMessages(["Servers", serverId, "Channels", channelId, "Messages"]);
 
   const { data: messages } = useQuery(
-    ['channel-messages', serverID, channelID],
+    ["channel-messages", serverId, channelId],
     queryFn,
-    { enabled: !!serverID && !!channelID }
+    { enabled: !!serverId && !!channelId }
   );
 
   return messages;
 };
 
 const useAddMessage = (
-  serverID: string | undefined,
-  channelID: string | undefined,
+  serverId: string | undefined,
+  channelId: string | undefined,
   queryClient: QueryClient
 ) => {
   const mutationFn = (message: MessageData) => {
     return new Promise((resolve, reject) => {
-      if (serverID === undefined || channelID === undefined) {
-        reject('conversationID is undefined');
+      if (serverId === undefined || channelId === undefined) {
+        reject("conversationId is undefined");
       } else {
         const messagesPath = [
-          'Servers',
-          serverID,
-          'Channels',
-          channelID,
-          'Messages',
+          "Servers",
+          serverId,
+          "Channels",
+          channelId,
+          "Messages",
         ];
         resolve(addMessage(messagesPath, message));
       }
@@ -44,7 +44,7 @@ const useAddMessage = (
 
   return useMutation(mutationFn, {
     onSuccess: () => {
-      queryClient.invalidateQueries(['channel-messages', serverID, channelID]);
+      queryClient.invalidateQueries(["channel-messages", serverId, channelId]);
     },
   });
 };

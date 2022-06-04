@@ -7,7 +7,7 @@ type CreateMessageData = {
   interlocutorId: string;
   message: {
     id: string;
-    authorID: string;
+    authorId: string;
     content: any;
   };
 };
@@ -79,7 +79,7 @@ export const sendMessage = functions.https.onCall(
       if (user === undefined) return "failure";
 
       // If a conversation doesn't exist between the two, create one.
-      if (!user.interlocutorIDs.includes(interlocutorId)) {
+      if (!user.interlocutorIds.includes(interlocutorId)) {
         const conversationId = await createConversation([uid, interlocutorId]);
         await createMessage(conversationId, messageData);
       }

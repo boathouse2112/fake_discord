@@ -1,15 +1,15 @@
-import InterlocutorListUser from './InterlocutorListElement';
+import InterlocutorListUser from "./InterlocutorListElement";
 
 const InterlocutorList = (props: {
-  interlocutorIDs: string[];
-  setCurrentInterlocutorID(id: string): void;
+  interlocutorIds: string[];
+  setCurrentInterlocutorId(id: string): void;
 }) => {
   const drawInterlocutors = () => {
-    return props.interlocutorIDs.map((id) => (
+    return props.interlocutorIds.map((id) => (
       <InterlocutorListUser
         key={id}
         id={id}
-        setCurrentInterlocutorID={props.setCurrentInterlocutorID}
+        setCurrentInterlocutorId={props.setCurrentInterlocutorId}
       />
     ));
   };

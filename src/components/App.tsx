@@ -20,10 +20,10 @@ function App() {
         <Route path="/" element={loggedIn ? <Home /> : <Login />} />
         <Route path="/@me" element={loggedIn ? <Home /> : <Login />} />
         <Route
-          path="/:serverID"
-          element={loggedIn ? <ServerView userID={USER_ID} /> : <Login />}
+          path="/:serverId"
+          element={loggedIn ? <ServerView userId={USER_ID} /> : <Login />}
         >
-          <Route path=":channelID" element={<ChannelView />} />
+          <Route path=":channelId" element={<ChannelView />} />
         </Route>
         <Route path="*" element={<Navigate to="/@me" replace />} />
       </Routes>

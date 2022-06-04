@@ -1,32 +1,32 @@
-import { useAuthUser } from '@react-query-firebase/auth';
-import dayjs from 'dayjs';
-import { nanoid } from 'nanoid';
-import { useQueryClient } from 'react-query';
-import { useParams } from 'react-router-dom';
-import { auth } from '../../firebase';
-import { MessageContent, MessageData } from '../../types';
-import MessageHistory from '../messages/MessageHistory';
-import MessageInput from '../messages/MessageInput';
-import { useAddMessage, useChannelMessages } from './hooks';
+import { useAuthUser } from "@react-query-firebase/auth";
+import dayjs from "dayjs";
+import { nanoid } from "nanoid";
+import { useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
+import { auth } from "../../firebase";
+import { MessageContent, MessageData } from "../../types";
+import MessageHistory from "../messages/MessageHistory";
+import MessageInput from "../messages/MessageInput";
+import { useAddMessage, useChannelMessages } from "./hooks";
 
 const ChannelView = () => {
-  const { serverID, channelID } = useParams();
+  const { serverId, channelId } = useParams();
 
-  const authUser = useAuthUser('auth-user', auth);
-  const userID = authUser?.data?.uid;
+  const authUser = useAuthUser("auth-user", auth);
+  const userId = authUser?.data?.uid;
 
   const queryClient = useQueryClient();
-  const messages = useChannelMessages(serverID, channelID);
-  const addMessageMutation = useAddMessage(serverID, channelID, queryClient);
+  const messages = useChannelMessages(serverId, channelId);
+  const addMessageMutation = useAddMessage(serverId, channelId, queryClient);
 
   const submitMessage = (content: MessageContent) => {
-    if (!userID) {
-      throw Error('Submitted message while not signed in.');
+    if (!userId) {
+      throw Error("Submitted message while not signed in.");
     }
 
     const message: MessageData = {
       id: nanoid(),
-      authorID: userID,
+      authorId: userId,
       time: dayjs(),
       content,
     };
