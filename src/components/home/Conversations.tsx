@@ -1,34 +1,17 @@
 import { useAuthUser } from "@react-query-firebase/auth";
 import { useState } from "react";
-import { useQuery } from "react-query";
-import { auth } from "../../firebase";
-import { fetchConversationParticipants } from "../../firestoreQueries";
-import { useUser } from "../../hooks";
-import MessageView from "../messages/MessageView";
+import { auth } from "../../firebase/firebase";
+import { useConversations, useUser } from "../../firebase/hooks";
 import InterlocutorList from "./InterlocutorList";
+import MessageViewWrapper from "../messages/MessageViewWrapper";
 
-const useConversationParticipants = (conversationIds: string[] | undefined) => {
-  const { data: participants } = useQuery(
-    ["conversation-participants", conversationIds],
-    () =>
-      conversationIds !== undefined
-        ? fetchConversationParticipants(conversationIds)
-        : undefined,
-    { enabled: !!conversationIds }
-  );
-
-  return participants;
-};
-
-// Handles DM state
-const DirectMessages = () => {
+// Handles conversation state
+const Conversations = () => {
   const authUser = useAuthUser("auth-user", auth);
   const userId = authUser?.data?.uid;
 
   const { data: user } = useUser(userId);
-  const conversationParticipants = useConversationParticipants(
-    user?.conversationIds
-  );
+  const { data: conversations } = useConversations(user?.conversationIds);
 
   const [currentInterlocutorId, setCurrentInterlocutorId] = useState<
     string | undefined
@@ -39,14 +22,14 @@ const DirectMessages = () => {
   // Filter the user's conversations to find the one with both the user and the currentInterlocutor
   const currentConversationId = (() => {
     if (
-      conversationParticipants === undefined ||
+      conversations === undefined ||
       user === undefined ||
       currentInterlocutorId === undefined
     ) {
       return undefined;
     }
 
-    for (const { conversationId, participants } of conversationParticipants) {
+    for (const { id: conversationId, participants } of conversations) {
       if (
         participants.includes(user.id) &&
         participants.includes(currentInterlocutorId)
@@ -64,9 +47,9 @@ const DirectMessages = () => {
         interlocutorIds={interlocutorIds ?? []}
         setCurrentInterlocutorId={setCurrentInterlocutorId}
       />
-      <MessageView conversationId={currentConversationId} />
+      <MessageViewWrapper conversationId={currentConversationId} />
     </div>
   );
 };
 
-export default DirectMessages;
+export default Conversations;

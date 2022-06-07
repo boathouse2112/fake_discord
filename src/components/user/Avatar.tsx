@@ -1,4 +1,4 @@
-import { useAvatar, useUser } from "../../hooks";
+import { useAvatar, useUser } from "../../firebase/hooks";
 
 /**
  * The avatar of the given user

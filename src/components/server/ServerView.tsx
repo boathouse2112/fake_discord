@@ -2,9 +2,9 @@ import { useAuthUser } from "@react-query-firebase/auth";
 import { Navigate, useLocation } from "react-router-dom";
 import Server from "./Server";
 import ServerList from "../server_list/ServerList";
-import { auth } from "../../firebase";
+import { auth } from "../../firebase/firebase";
 
-const ServerView = (props: { userId: string }) => {
+const ServerView = () => {
   const authUser = useAuthUser("auth-user", auth);
   const location = useLocation();
 

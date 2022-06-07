@@ -2,7 +2,7 @@ import { Float } from "@headlessui-float/react";
 import { Popover } from "@headlessui/react";
 import FastAverageColor from "fast-average-color";
 import { useEffect, useState } from "react";
-import { useAvatar, useUser } from "../../hooks";
+import { useAvatar, useUser } from "../../firebase/hooks";
 import Avatar from "./Avatar";
 import UserCardInput from "./UserCardInput";
 

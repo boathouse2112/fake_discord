@@ -7,6 +7,7 @@
     "@headlessui-float/react": "^0.6.0",
     "@headlessui/react": "^1.6.1",
     "@react-query-firebase/auth": "^0.3.4",
+    "@react-query-firebase/firestore": "^0.4.2",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
     "@testing-library/user-event": "^13.5.0",

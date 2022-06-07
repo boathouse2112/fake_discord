@@ -1,21 +1,12 @@
-import { useQuery } from "react-query";
 import { Outlet, useParams } from "react-router-dom";
-import { fetchServer } from "../../firestoreQueries";
-import { ServerData } from "../../types";
 import ChannelList from "./ChannelList";
 import ChannelView from "./ChannelView";
 import ServerHeader from "./ServerHeader";
-
-const useServer = (serverId: string | undefined): ServerData | undefined => {
-  const { data: server } = useQuery(["server", serverId], () =>
-    serverId ? fetchServer(serverId) : undefined
-  );
-  return server;
-};
+import { useServer } from "../../firebase/hooks";
 
 const Server = () => {
   const { serverId, channelId: currentChannelId } = useParams();
-  const server = useServer(serverId);
+  const { data: server } = useServer(serverId);
 
   const currentChannelName = (() => {
     if (currentChannelId === undefined) return undefined;

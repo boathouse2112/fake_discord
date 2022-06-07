@@ -1,18 +1,10 @@
-import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import { fetchServerNames } from "../../firestoreQueries";
 import avatar from "./../../resources/discord_avatar.png";
 import ServerIcon from "./ServerIcon";
-
-const useServerNames = (): { id: string; name: string }[] | undefined => {
-  const { data: serverNames } = useQuery("server-names", () =>
-    fetchServerNames()
-  );
-  return serverNames;
-};
+import { useServerDescriptions } from "../../firebase/hooks";
 
 const ServerList = () => {
-  const serverNames = useServerNames();
+  const serverNames = useServerDescriptions();
 
   const homeIcon = (
     <Link to={"/@me"}>

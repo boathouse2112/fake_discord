@@ -1,8 +1,8 @@
 import { useAuthUser } from "@react-query-firebase/auth";
 import { Navigate, useLocation } from "react-router-dom";
-import DirectMessages from "./DirectMessages";
+import Conversations from "./Conversations";
 import ServerList from "../server_list/ServerList";
-import { auth } from "../../firebase";
+import { auth } from "../../firebase/firebase";
 
 const Home = () => {
   const authUser = useAuthUser("auth-user", auth);
@@ -22,7 +22,7 @@ const Home = () => {
   return (
     <div className="w-screen h-screen flex">
       <ServerList />
-      <DirectMessages user="Mark" />
+      <Conversations />
     </div>
   );
 };

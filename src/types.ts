@@ -2,72 +2,70 @@ import { Dayjs } from "dayjs";
 import { z } from "zod";
 
 // Represents a user
-const UserSchema = z.object({
+export const UserSchema = z.object({
   id: z.string(),
   name: z.string(),
   avatarPath: z.string(),
   interlocutorIds: z.string().array(), // IDs of interlocutors
   conversationIds: z.string().array(), // IDs of conversations
 });
-type User = z.infer<typeof UserSchema>;
+export type User = z.infer<typeof UserSchema>;
 
 // Message content types
 // Tagged union, can switch on `type` field.
-const TextContentSchema = z.object({
+export const TextContentSchema = z.object({
   type: z.literal("text"),
   text: z.string(),
 });
-type TextContent = z.infer<typeof TextContentSchema>;
+export type TextContent = z.infer<typeof TextContentSchema>;
 
-const MessageContentSchema = z.discriminatedUnion("type", [
+export const MessageContentSchema = z.discriminatedUnion("type", [
   TextContentSchema,
   z.object({ type: z.literal("none") }),
 ]);
-type MessageContent = z.infer<typeof MessageContentSchema>;
+export type MessageContent = z.infer<typeof MessageContentSchema>;
 
 const zDayjs: z.ZodType<Dayjs> = z.any(); // Let Zod accept a Dayjs object without defining it as a schema
 
 // Abstract message model type. Converted to message view props.
-const MessageDataSchema = z.object({
+export const MessageDataSchema = z.object({
   id: z.string(),
   authorId: z.string(),
   time: zDayjs,
   content: MessageContentSchema,
 });
-type MessageData = z.infer<typeof MessageDataSchema>;
+export type MessageData = z.infer<typeof MessageDataSchema>;
+
+export const ConversationDescriptionSchema = z.object({
+  id: z.string(),
+  participants: z.string().array(),
+});
+export type ConversationDescription = z.infer<
+  typeof ConversationDescriptionSchema
+>;
 
 // Represents a direct-message conversation between multiple users
-const ConversationSchema = z.object({
-  participants: z.string().array(),
+export const ConversationSchema = ConversationDescriptionSchema.extend({
   messages: MessageDataSchema.array(),
 });
-type Conversation = z.infer<typeof ConversationSchema>;
+export type Conversation = z.infer<typeof ConversationSchema>;
 
 // Represents a channel in a server
 // Excludes the Messages subcollection, which should be fetched separately
-const ChannelSchema = z.object({
+export const ChannelSchema = z.object({
   id: z.string(),
   name: z.string(),
 });
-type Channel = z.infer<typeof ChannelSchema>;
+export type Channel = z.infer<typeof ChannelSchema>;
 
-// Represents a server
-// TODO: I really shouldn't load all
-const ServerDataSchema = z.object({
+export const ServerDescriptionSchema = z.object({
   id: z.string(),
   name: z.string(),
   memberIds: z.string().array(),
+});
+export type ServerDescription = z.infer<typeof ServerDescriptionSchema>;
+
+export const ServerDataSchema = ServerDescriptionSchema.extend({
   channels: ChannelSchema.array(),
 });
-type ServerData = z.infer<typeof ServerDataSchema>;
-
-export type {
-  User,
-  TextContent,
-  MessageContent,
-  MessageData,
-  Conversation,
-  Channel,
-  ServerData,
-};
-export { UserSchema, MessageContentSchema, ChannelSchema, ServerDataSchema };
+export type ServerData = z.infer<typeof ServerDataSchema>;

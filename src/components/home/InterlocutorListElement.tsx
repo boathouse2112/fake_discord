@@ -1,11 +1,11 @@
-import { useUserName } from "../../hooks";
+import { useUser } from "../../firebase/hooks";
 import Avatar from "../user/Avatar";
 
 const InterlocutorListUser = (props: {
   id: string;
   setCurrentInterlocutorId(id: string): void;
 }) => {
-  const name = useUserName(props.id);
+  const { data: user } = useUser(props.id);
 
   return (
     <div
@@ -13,7 +13,7 @@ const InterlocutorListUser = (props: {
       onClick={() => props.setCurrentInterlocutorId(props.id)}
     >
       <Avatar userId={props.id} />
-      <h1 className="text-white font-sans">{name ?? ""}</h1>
+      <h1 className="text-white font-sans">{user?.name ?? ""}</h1>
     </div>
   );
 };

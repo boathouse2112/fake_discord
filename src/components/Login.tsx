@@ -1,11 +1,11 @@
-import { useAuthUser } from '@react-query-firebase/auth';
-import { StyledFirebaseAuth } from 'react-firebaseui';
-import { Navigate } from 'react-router-dom';
-import { auth } from '../firebase';
-import { uiConfig } from '../firebaseConfig';
+import { useAuthUser } from "@react-query-firebase/auth";
+import { StyledFirebaseAuth } from "react-firebaseui";
+import { Navigate } from "react-router-dom";
+import { auth } from "../firebase/firebase";
+import { uiConfig } from "../firebase/firebaseConfig";
 
 const Login = () => {
-  const authUser = useAuthUser('auth-user', auth);
+  const authUser = useAuthUser("auth-user", auth);
 
   if (authUser.isSuccess) {
     return <Navigate to="/@me" />;

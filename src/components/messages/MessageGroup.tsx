@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { useUserName } from "../../hooks";
+import { useUser } from "../../firebase/hooks";
 import { MessageData } from "../../types";
 import Avatar from "../user/Avatar";
 import Message from "./Message";
@@ -13,7 +13,7 @@ type MessageGroupProps = {
 };
 
 const MessageGroup = (props: MessageGroupProps) => {
-  const authorName = useUserName(props.authorId);
+  const { data: author } = useUser(props.authorId);
 
   const drawMessages = () => {
     return props.messages.map((message) => (
@@ -26,9 +26,9 @@ const MessageGroup = (props: MessageGroupProps) => {
       <Avatar userId={props.authorId} />
       <div className="flex flex-col text-white">
         <div className="flex flex-row gap-2">
-          {authorName === undefined ? undefined : (
-            <UserCard userId={props.authorId} userName={authorName} />
-          )}
+          {author ? (
+            <UserCard userId={props.authorId} userName={author.name} />
+          ) : undefined}
           <h2>{props.time.fromNow()}</h2>
         </div>
         {drawMessages()}
