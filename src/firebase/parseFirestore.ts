@@ -22,7 +22,7 @@ import {
   SubmittedFirestoreMessageSchema,
 } from "./types";
 
-export const parseChannel = (channelSnap: QueryDocumentSnapshot): Channel => {
+export const parseChannel = (channelSnap: DocumentSnapshot): Channel => {
   const channel = FirestoreChannelSchema.parse(channelSnap.data());
   return { ...channel, id: channelSnap.id };
 };

@@ -4,7 +4,11 @@ import { auth } from "../../firebase/firebase";
 import { MessageContent } from "../../types";
 import MessageHistory from "../messages/MessageHistory";
 import MessageInput from "../messages/MessageInput";
-import { useMessages, useMessagesMutation } from "../../firebase/hooks";
+import {
+  useChannel,
+  useMessages,
+  useMessagesMutation,
+} from "../../firebase/hooks";
 import { createMessage } from "../../firebase/util";
 
 const useChannelMessages = (
@@ -29,6 +33,7 @@ const useChannelMessagesMutation = (
 
 const ChannelView = () => {
   const { serverId, channelId } = useParams();
+  const { data: channel } = useChannel(serverId, channelId);
 
   const authUser = useAuthUser("auth-user", auth);
   const userId = authUser?.data?.uid;
@@ -48,7 +53,10 @@ const ChannelView = () => {
   return (
     <div className="w-full h-full bg-neutral-600 flex flex-col">
       <MessageHistory messages={messages ?? []} />
-      <MessageInput submitMessage={submitMessage} />
+      <MessageInput
+        submitMessage={submitMessage}
+        placeholder={`Message #${channel?.name}`}
+      />
     </div>
   );
 };

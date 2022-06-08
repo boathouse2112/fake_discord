@@ -9,6 +9,7 @@ import { createMessage } from "../../firebase/util";
 
 export const MessageViewPropsSchema = z.object({
   conversationId: z.string(),
+  inputPlaceholder: z.string().optional(),
 });
 export type MessageViewProps = z.infer<typeof MessageViewPropsSchema>;
 
@@ -38,7 +39,10 @@ const MessageView = (props: MessageViewProps) => {
   return (
     <>
       <MessageHistory messages={messages ?? []} />
-      <MessageInput submitMessage={submitMessage} />
+      <MessageInput
+        submitMessage={submitMessage}
+        placeholder={props.inputPlaceholder}
+      />
     </>
   );
 };

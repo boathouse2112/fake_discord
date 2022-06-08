@@ -50,7 +50,10 @@ const ConversationView = () => {
           interlocutorIds={interlocutorIds ?? []}
           setCurrentInterlocutorId={setCurrentInterlocutorId}
         />
-        <MessageViewWrapper conversationId={currentConversationId} />
+        <MessageViewWrapper
+          conversationId={currentConversationId}
+          inputPlaceholder={`Message @${currentInterlocutor?.name}`}
+        />
       </div>
     </div>
   );

@@ -31,7 +31,10 @@ const MessageInput = (props: {
   return (
     <div className="p-4 bg-neutral-600">
       <input
-        className="w-full h-12 px-4 rounded-md bg-neutral-400 outline-none text-white"
+        className={
+          "w-full h-12 px-4 rounded-md bg-neutral-500 outline-none " +
+          "text-white placeholder:text-neutral-400"
+        }
         type="text"
         placeholder={props.placeholder}
         value={state}

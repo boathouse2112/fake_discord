@@ -24,6 +24,8 @@ import {
 import { ServerData } from "../types";
 import { downloadImage } from "./util";
 
+const DUMMY = "_DUMMY_";
+
 // Download the avatar from firebase
 export const useAvatar = (avatarPath: string | undefined) => {
   return useQuery(
@@ -34,7 +36,7 @@ export const useAvatar = (avatarPath: string | undefined) => {
 };
 
 export const useUser = (userId: string | undefined) => {
-  const ref = doc(firestore, "Users", userId ?? "_DUMMY_");
+  const ref = doc(firestore, "Users", userId ?? DUMMY);
   const res = useFirestoreDocumentData(
     ["user", userId],
     ref,
@@ -53,7 +55,7 @@ export const useConversations = (conversationIds: string[] | undefined) => {
         collection(firestore, "Conversations"),
         where(documentId(), "in", conversationIds)
       )
-    : collection(firestore, "_DUMMY_");
+    : collection(firestore, DUMMY);
   const res = useFirestoreQuery(["conversations", conversationIds], ref);
   const conversations = res.data
     ? res.data?.docs.map(parseConversation)
@@ -65,11 +67,14 @@ export const useServerDescriptions = () => {
   const ref = collection(firestore, "Servers");
   const res = useFirestoreQuery(["servers"], ref);
   const servers = res.data?.docs.map(parseServer);
-  return servers?.map((server) => ({ id: server.id, name: server.name }));
+  return servers?.map((server) => ({
+    id: server.id,
+    name: server.name,
+  }));
 };
 
 export const useServer = (serverId: string | undefined) => {
-  const ref = doc(firestore, "Servers", serverId ?? "");
+  const ref = doc(firestore, "Servers", serverId ?? DUMMY);
   const res = useFirestoreDocument(
     ["server", serverId],
     ref,
@@ -86,7 +91,7 @@ export const useServer = (serverId: string | undefined) => {
 };
 
 export const useChannels = (serverId: string | undefined) => {
-  const ref = collection(firestore, "Servers", serverId ?? "", "Channels");
+  const ref = collection(firestore, "Servers", serverId ?? DUMMY, "Channels");
   const res = useFirestoreQuery(
     ["channels", serverId],
     ref,
@@ -97,9 +102,30 @@ export const useChannels = (serverId: string | undefined) => {
   return { ...res, data: channels };
 };
 
+export const useChannel = (
+  serverId: string | undefined,
+  channelId: string | undefined
+) => {
+  const ref = doc(
+    firestore,
+    "Servers",
+    serverId ?? DUMMY,
+    "Channels",
+    channelId ?? DUMMY
+  );
+  const res = useFirestoreDocument(
+    ["channel", serverId, channelId],
+    ref,
+    {},
+    { enabled: !!channelId && !!serverId }
+  );
+  const channel = res.data ? parseChannel(res.data) : undefined;
+  return { ...res, data: channel };
+};
+
 export const useMessages = (pathToMessages: string | undefined) => {
   // Create the collection ref in the path-defined and path-undefined cases.
-  const collectionRef = collection(firestore, pathToMessages ?? "_DUMMY_");
+  const collectionRef = collection(firestore, pathToMessages ?? DUMMY);
 
   // const collectionRef = path ? collection(firestore, ...path) : undefined;
   const ref = query(collectionRef, orderBy("time", "asc"));
