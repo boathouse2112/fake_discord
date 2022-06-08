@@ -1,5 +1,15 @@
 import { getBlob, ref } from "firebase/storage";
 import { storage } from "./firebase";
+import { nanoid } from "nanoid";
+import { serverTimestamp } from "firebase/firestore";
+import { MessageContent } from "../types";
+
+export const createMessage = (content: MessageContent, authorId: string) => ({
+  id: nanoid(),
+  authorId,
+  time: serverTimestamp(),
+  content,
+});
 
 /**
  * Download the image with the given source from cloud storage

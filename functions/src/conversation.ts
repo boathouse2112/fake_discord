@@ -1,7 +1,7 @@
 // import * as admin from "firebase-admin";
-import { FieldValue } from "firebase-admin/lib/firestore";
+import { FieldValue } from "firebase-admin/firestore";
 import * as functions from "firebase-functions";
-import { db } from "./index";
+import { firestore } from "./index";
 
 type CreateMessageData = {
   interlocutorId: string;
@@ -20,14 +20,14 @@ type CreateMessageData = {
 const createConversation = (participantIds: string[]): Promise<string> =>
   new Promise(async (resolve) => {
     // Create conversation
-    const conversations = db.collection("Conversations");
+    const conversations = firestore.collection("ConversationView");
     const conversation = await conversations.add({
       participants: participantIds,
     });
 
     // Add conversation and interlocutors to each participant profile.
     for (const userId of participantIds) {
-      const profile = db.doc(`Users/${userId}`);
+      const profile = firestore.doc(`Users/${userId}`);
       const interlocutorIds = participantIds.filter((id) => id !== userId);
 
       await profile.update({
@@ -46,7 +46,7 @@ const createMessage = (
   new Promise(async (resolve) => {
     const messageData = data.message;
 
-    const conversation = db.doc(`Conversations/${conversationId}`);
+    const conversation = firestore.doc(`Conversations/${conversationId}`);
     const messages = conversation.collection("Messages");
     const message = await messages.add({
       ...messageData,
@@ -72,7 +72,7 @@ export const sendMessage = functions.https.onCall(
       const interlocutorId = messageData.interlocutorId;
 
       // Get collections and docs
-      const user = await db
+      const user = await firestore
         .doc(`Users/${uid}`)
         .get()
         .then((docSnap) => docSnap.data());

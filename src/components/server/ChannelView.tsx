@@ -1,12 +1,11 @@
 import { useAuthUser } from "@react-query-firebase/auth";
-import { nanoid } from "nanoid";
 import { useParams } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import { MessageContent } from "../../types";
 import MessageHistory from "../messages/MessageHistory";
 import MessageInput from "../messages/MessageInput";
 import { useMessages, useMessagesMutation } from "../../firebase/hooks";
-import { serverTimestamp } from "firebase/firestore";
+import { createMessage } from "../../firebase/util";
 
 const useChannelMessages = (
   serverId: string | undefined,
@@ -42,13 +41,7 @@ const ChannelView = () => {
       throw Error("Submitted message while not signed in.");
     }
 
-    const message = {
-      id: nanoid(),
-      authorId: userId,
-      time: serverTimestamp(),
-      content,
-    };
-
+    const message = createMessage(content, userId);
     messagesMutation.mutate(message);
   };
 

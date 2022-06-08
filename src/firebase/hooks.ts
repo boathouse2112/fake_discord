@@ -34,7 +34,7 @@ export const useAvatar = (avatarPath: string | undefined) => {
 };
 
 export const useUser = (userId: string | undefined) => {
-  const ref = doc(firestore, "Users", userId ?? "");
+  const ref = doc(firestore, "Users", userId ?? "_DUMMY_");
   const res = useFirestoreDocumentData(
     ["user", userId],
     ref,

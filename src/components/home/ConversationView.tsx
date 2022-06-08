@@ -4,20 +4,21 @@ import { auth } from "../../firebase/firebase";
 import { useConversations, useUser } from "../../firebase/hooks";
 import InterlocutorList from "./InterlocutorList";
 import MessageViewWrapper from "../messages/MessageViewWrapper";
+import ConversationHeader from "./ConversationHeader";
 
 // Handles conversation state
-const Conversations = () => {
+const ConversationView = () => {
   const authUser = useAuthUser("auth-user", auth);
   const userId = authUser?.data?.uid;
 
   const { data: user } = useUser(userId);
+  const interlocutorIds = user?.interlocutorIds;
   const { data: conversations } = useConversations(user?.conversationIds);
 
   const [currentInterlocutorId, setCurrentInterlocutorId] = useState<
     string | undefined
   >(undefined);
-
-  const interlocutorIds = user?.interlocutorIds;
+  const { data: currentInterlocutor } = useUser(currentInterlocutorId);
 
   // Filter the user's conversations to find the one with both the user and the currentInterlocutor
   const currentConversationId = (() => {
@@ -42,14 +43,17 @@ const Conversations = () => {
   })();
 
   return (
-    <div className="w-full flex">
-      <InterlocutorList
-        interlocutorIds={interlocutorIds ?? []}
-        setCurrentInterlocutorId={setCurrentInterlocutorId}
-      />
-      <MessageViewWrapper conversationId={currentConversationId} />
+    <div className={"w-full h-full flex flex-col"}>
+      <ConversationHeader interlocutorName={currentInterlocutor?.name} />
+      <div className={"h-full min-h-0 flex"}>
+        <InterlocutorList
+          interlocutorIds={interlocutorIds ?? []}
+          setCurrentInterlocutorId={setCurrentInterlocutorId}
+        />
+        <MessageViewWrapper conversationId={currentConversationId} />
+      </div>
     </div>
   );
 };
 
-export default Conversations;
+export default ConversationView;

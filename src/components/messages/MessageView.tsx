@@ -1,12 +1,11 @@
 import { useAuthUser } from "@react-query-firebase/auth";
-import { nanoid } from "nanoid";
 import { auth } from "../../firebase/firebase";
 import { MessageContent } from "../../types";
 import MessageHistory from "./MessageHistory";
 import MessageInput from "./MessageInput";
 import { z } from "zod";
-import { serverTimestamp } from "firebase/firestore";
 import { useMessages, useMessagesMutation } from "../../firebase/hooks";
+import { createMessage } from "../../firebase/util";
 
 export const MessageViewPropsSchema = z.object({
   conversationId: z.string(),
@@ -32,13 +31,7 @@ const MessageView = (props: MessageViewProps) => {
       throw Error("Submitted message while not signed in.");
     }
 
-    const message = {
-      id: nanoid(),
-      authorId: userId,
-      time: serverTimestamp(),
-      content,
-    };
-
+    const message = createMessage(content, userId);
     messagesMutation.mutate(message);
   };
 

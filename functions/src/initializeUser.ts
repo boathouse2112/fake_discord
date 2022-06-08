@@ -1,10 +1,8 @@
-import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
-
-admin.initializeApp();
+import { firestore } from "./index";
 
 const initializeUser = functions.auth.user().onCreate((user) =>
-  admin.firestore().collection("Users").doc(user.uid).set({
+  firestore.collection("Users").doc(user.uid).set({
     name: user.displayName,
     conversationIds: [],
     interlocutorIds: [],

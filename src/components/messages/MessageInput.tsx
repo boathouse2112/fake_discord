@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { MessageContent, TextContent } from '../../types';
+import React, { useState } from "react";
+import { MessageContent, TextContent } from "../../types";
 
 const MessageInput = (props: {
   submitMessage: (content: MessageContent) => void;
+  placeholder?: string;
 }) => {
-  const [state, setState] = useState('');
+  const [state, setState] = useState("");
 
   // On change, update message input state.
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -13,7 +14,7 @@ const MessageInput = (props: {
 
   // On (non-shift) enter, submit the input form.
   const onEnterPress = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
+    if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
       handleSubmit();
     }
@@ -21,10 +22,10 @@ const MessageInput = (props: {
 
   // On submit, call submitMessage prop, and clear message input.
   const handleSubmit = () => {
-    const content: TextContent = { type: 'text', text: state };
+    const content: TextContent = { type: "text", text: state };
     props.submitMessage(content);
 
-    setState('');
+    setState("");
   };
 
   return (
@@ -32,6 +33,7 @@ const MessageInput = (props: {
       <input
         className="w-full h-12 px-4 rounded-md bg-neutral-400 outline-none text-white"
         type="text"
+        placeholder={props.placeholder}
         value={state}
         onChange={handleChange}
         onKeyDown={onEnterPress}

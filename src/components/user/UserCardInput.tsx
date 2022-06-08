@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TextContent } from "../../types";
+import { sendMessage } from "../../firebase/functions";
+import { nanoid } from "nanoid";
+import { useAuthUser } from "@react-query-firebase/auth";
+import { auth } from "../../firebase/firebase";
 
-const UserCardInput = () => {
+const UserCardInput = (props: { interlocutorId: string }) => {
   const navigate = useNavigate();
+  const { data: user } = useAuthUser("auth-user", auth);
+  const uid = user?.uid;
 
   const [state, setState] = useState("");
 
@@ -13,23 +19,27 @@ const UserCardInput = () => {
   };
 
   // On (non-shift) enter, submit the input form.
-  const onEnterPress = (event: React.KeyboardEvent) => {
+  const onEnterPress = async (event: React.KeyboardEvent) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
-      handleSubmit();
+      await handleSubmit();
     }
   };
 
   // On submit, redirect to
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const content: TextContent = { type: "text", text: state };
-    // props.submitMessage(content);
+    console.log(sendMessage.toString());
+    await sendMessage({
+      interlocutorId: props.interlocutorId,
+      message: { id: nanoid(), authorId: uid, content },
+    });
 
-    setState("");
+    navigate({ pathname: `` });
   };
 
   return (
-    <div className="p-4 bg-neutral-600">
+    <>
       <input
         className="w-full h-12 px-4 rounded-md bg-neutral-400 outline-none text-white"
         type="text"
@@ -37,7 +47,7 @@ const UserCardInput = () => {
         onChange={handleChange}
         onKeyDown={onEnterPress}
       ></input>
-    </div>
+    </>
   );
 };
 

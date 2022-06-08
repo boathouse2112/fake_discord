@@ -1,6 +1,6 @@
 import { useAuthUser } from "@react-query-firebase/auth";
 import { Navigate, useLocation } from "react-router-dom";
-import Conversations from "./Conversations";
+import ConversationView from "./ConversationView";
 import ServerList from "../server_list/ServerList";
 import { auth } from "../../firebase/firebase";
 
@@ -22,7 +22,7 @@ const Home = () => {
   return (
     <div className="w-screen h-screen flex">
       <ServerList />
-      <Conversations />
+      <ConversationView />
     </div>
   );
 };

@@ -37,8 +37,8 @@ const UserCard = (props: { userName: string; userId: string }) => {
               <div className="relative h-10">
                 <div
                   className={
-                    "absolute left-3 bottom-0 w-20 h-20 rounded-full" +
-                    " bg-neutral-900 flex justify-center items-center"
+                    "absolute left-3 bottom-0 w-20 h-20 rounded-full " +
+                    "bg-neutral-900 flex justify-center items-center"
                   }
                 >
                   <Avatar userId={user.id} width={64} />
@@ -56,7 +56,9 @@ const UserCard = (props: { userName: string; userId: string }) => {
                 eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
               </p>
             </div>
-            <UserCardInput />
+            <div className="p-4 bg-neutral-900">
+              <UserCardInput interlocutorId={props.userId} />
+            </div>
           </div>
         </Popover.Panel>
       </Float>
