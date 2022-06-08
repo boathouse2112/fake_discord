@@ -55,7 +55,7 @@ const ChannelView = () => {
       <MessageHistory messages={messages ?? []} />
       <MessageInput
         submitMessage={submitMessage}
-        placeholder={`Message #${channel?.name}`}
+        placeholder={channel ? `Message #${channel.name}` : undefined}
       />
     </div>
   );

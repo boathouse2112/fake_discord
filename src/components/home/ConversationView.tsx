@@ -52,7 +52,11 @@ const ConversationView = () => {
         />
         <MessageViewWrapper
           conversationId={currentConversationId}
-          inputPlaceholder={`Message @${currentInterlocutor?.name}`}
+          inputPlaceholder={
+            currentInterlocutor
+              ? `Message @${currentInterlocutor.name}`
+              : undefined
+          }
         />
       </div>
     </div>
