@@ -6,6 +6,7 @@
     "@floating-ui/react-dom": "^0.7.1",
     "@headlessui-float/react": "^0.6.0",
     "@headlessui/react": "^1.6.1",
+    "@heroicons/react": "^1.0.6",
     "@react-query-firebase/auth": "^0.3.4",
     "@react-query-firebase/firestore": "^0.4.2",
     "@testing-library/jest-dom": "^5.16.4",

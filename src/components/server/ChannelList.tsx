@@ -1,5 +1,6 @@
 import { Channel } from "../../types";
 import ChannelListElement from "./ChannelListElement";
+import UserPanel from "../user/UserPanel";
 
 const ChannelList = (props: { serverId: string; channels: Channel[] }) => {
   const drawChannels = () => {
@@ -13,8 +14,9 @@ const ChannelList = (props: { serverId: string; channels: Channel[] }) => {
   };
 
   return (
-    <div className="flex-shrink-0 w-52 p-4 flex flex-col gap-2 bg-neutral-700">
-      {drawChannels()}
+    <div className="flex-shrink-0 w-52 flex flex-col justify-between bg-neutral-700">
+      <div className="p-4 flex flex-col gap-2">{drawChannels()}</div>
+      <UserPanel />
     </div>
   );
 };

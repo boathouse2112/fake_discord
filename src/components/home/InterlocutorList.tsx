@@ -1,4 +1,5 @@
 import InterlocutorListUser from "./InterlocutorListElement";
+import UserPanel from "../user/UserPanel";
 
 const InterlocutorList = (props: {
   interlocutorIds: string[];
@@ -15,8 +16,9 @@ const InterlocutorList = (props: {
   };
 
   return (
-    <div className="flex-shrink-0 w-52 p-4 flex flex-col gap-2 bg-neutral-700">
-      {drawInterlocutors()}
+    <div className="flex-shrink-0 w-52 flex flex-col justify-between bg-neutral-700">
+      <div className="p-4 flex flex-col gap-2">{drawInterlocutors()}</div>
+      <UserPanel />
     </div>
   );
 };
