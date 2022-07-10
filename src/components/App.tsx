@@ -7,6 +7,7 @@ import { auth } from "../firebase/firebase";
 import Home from "./home/Home";
 import Login from "./Login";
 import ServerView from "./server/ServerView";
+import UserSettings from "./settings/UserSettings";
 
 dayjs.extend(relativeTime);
 
@@ -16,15 +17,20 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/login" element={<Login />} />
         <Route path="/" element={loggedIn ? <Home /> : <Login />} />
         <Route path="/@me" element={loggedIn ? <Home /> : <Login />} />
+        <Route
+          path="user-settings"
+          element={loggedIn ? <UserSettings /> : <Login />}
+        />
         <Route
           path="/:serverId"
           element={loggedIn ? <ServerView /> : <Login />}
         >
           <Route path=":channelId" element={<ChannelView />} />
         </Route>
-        <Route path="*" element={<Navigate to="/@me" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   );
