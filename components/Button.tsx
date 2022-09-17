@@ -1,18 +1,15 @@
+import { ButtonTheme, Theme } from '../theme/theme';
+
 type ButtonProps = {
   /**
-   * What background color to use
+   * What kind of button?
    */
-  backgroundColor?: string;
+  variant: 'primary' | 'secondary';
 
   /**
-   * What hover color to use
+   * What theme is applied?
    */
-  hoverColor?: string;
-
-  /**
-   * The color of the text
-   */
-  textColor?: string;
+  theme: Theme;
 
   /**
    * The text of the button
@@ -25,17 +22,31 @@ type ButtonProps = {
   onClick?: () => void;
 };
 
-const Button = ({
-  backgroundColor,
-  hoverColor,
-  textColor,
-  label,
-  onClick,
-}: ButtonProps) => {
-  const styleBackgroundColor = backgroundColor
-    ? backgroundColor
-    : 'transparent';
-  const styleHoverColor = hoverColor ? hoverColor : styleBackgroundColor;
+const primaryButtonStyle = (buttonTheme: ButtonTheme) => `
+  button {
+    background-color: ${buttonTheme.backgroundColor};
+    color: ${buttonTheme.textColor};
+  }
+  button:hover {
+    background-color: ${buttonTheme.hoverColor};
+  }
+`;
+
+const secondaryButtonTheme = () => `
+  button {
+    background-color: transparent;
+  }
+  button:hover {
+    text-decoration-line: underline;
+  }
+`;
+
+const Button = ({ variant, theme, label, onClick }: ButtonProps) => {
+  const buttonTheme = theme.button;
+  const variantStyle =
+    variant === 'primary'
+      ? primaryButtonStyle(buttonTheme)
+      : secondaryButtonTheme();
 
   return (
     <>
@@ -49,21 +60,19 @@ const Button = ({
           border-radius: 0.25rem;
           border: none;
 
-          background-color: ${styleBackgroundColor};
-
           font-weight: 500;
           letter-spacing: -0.025em;
-          color: ${textColor};
 
           cursor: pointer;
         }
         button:hover {
-          background-color: ${styleHoverColor};
           text-decoration-line: underline;
         }
       `}</style>
+      <style jsx>{variantStyle}</style>
     </>
   );
 };
 
+export type { ButtonProps };
 export default Button;

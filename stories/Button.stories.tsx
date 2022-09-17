@@ -1,23 +1,38 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
-import Button from '../components/Button';
+import { ComponentMeta, StoryFn } from '@storybook/react';
+import Button, { ButtonProps } from '../components/Button';
+import dark from '../theme/dark';
+import light from '../theme/light';
 
 export default {
   title: 'Button',
   component: Button,
+  argTypes: {
+    theme: {
+      options: ['light', 'dark'],
+      control: { type: 'radio' },
+    },
+  },
 } as ComponentMeta<typeof Button>;
 
-const Template: ComponentStory<typeof Button> = (args) => <Button {...args} />;
+// Lets us use a button toggle to switch themes, rather than a theme object.
+type TemplateType = Omit<ButtonProps, 'theme'> & { theme: 'light' | 'dark' };
+
+const Template: StoryFn<TemplateType> = (args) => {
+  const theme = args.theme === 'light' ? light : dark;
+  const newArgs = { ...args, theme: theme };
+  return <Button {...newArgs} />;
+};
 
 export const Primary = Template.bind({});
 Primary.args = {
+  variant: 'primary',
+  theme: 'dark',
   label: 'PRIMARY BUTTON',
-  backgroundColor: 'rgb(87 101 242)',
-  hoverColor: 'rgb(71 82 196)',
-  textColor: 'rgb(250 250 250)',
 };
 
 export const Secondary = Template.bind({});
 Secondary.args = {
+  variant: 'secondary',
+  theme: 'dark',
   label: 'Secondary button',
-  backgroundColor: undefined,
 };
