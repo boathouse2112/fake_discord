@@ -4,8 +4,17 @@ type ButtonTheme = {
   textColor: string;
 };
 
-type Theme = {
-  button: ButtonTheme;
+type InputBoxTheme = {
+  wrapperBackgroundColor: string;
+  backgroundColor: string;
+  placeholderColor: string;
+  textColor: string;
+  iconColor: string;
 };
 
-export type { ButtonTheme, Theme };
+type Theme = {
+  button: ButtonTheme;
+  inputBox: InputBoxTheme;
+};
+
+export type { ButtonTheme, InputBoxTheme, Theme };

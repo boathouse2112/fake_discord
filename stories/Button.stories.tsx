@@ -19,7 +19,7 @@ type TemplateType = Omit<ButtonProps, 'theme'> & { theme: 'light' | 'dark' };
 
 const Template: StoryFn<TemplateType> = (args) => {
   const theme = args.theme === 'light' ? light : dark;
-  const newArgs = { ...args, theme: theme };
+  const newArgs = { ...args, theme: theme.button };
   return <Button {...newArgs} />;
 };
 

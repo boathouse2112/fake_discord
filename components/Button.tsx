@@ -1,4 +1,4 @@
-import { ButtonTheme, Theme } from '../theme/theme';
+import { ButtonTheme } from '../theme/theme';
 
 type ButtonProps = {
   /**
@@ -9,7 +9,7 @@ type ButtonProps = {
   /**
    * What theme is applied?
    */
-  theme: Theme;
+  theme: ButtonTheme;
 
   /**
    * The text of the button
@@ -42,11 +42,8 @@ const secondaryButtonTheme = () => `
 `;
 
 const Button = ({ variant, theme, label, onClick }: ButtonProps) => {
-  const buttonTheme = theme.button;
   const variantStyle =
-    variant === 'primary'
-      ? primaryButtonStyle(buttonTheme)
-      : secondaryButtonTheme();
+    variant === 'primary' ? primaryButtonStyle(theme) : secondaryButtonTheme();
 
   return (
     <>
