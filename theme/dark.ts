@@ -1,4 +1,4 @@
-import { Theme } from './theme';
+import { MessageGroupTheme, Theme } from './theme';
 
 // I don't care if this doesn't follow the normal x00 color numbering scheme.
 
@@ -16,7 +16,7 @@ const textPalette = {
   '100': 'rgb(79 84 93)', // muted channel name
   '200': 'rgb(113 118 125)', // input box placeholder text
   '300': 'rgb(150 152 158)', // channel name
-  '400': 'rgb(162 166 170)', // message datetime
+  '400': 'rgb(163 166 170)', // message datetime
   '500': 'rgb(185 187 190)', // normal icon
   '600': 'rgb(220 221 222)', // normal text
   '700': 'rgb(255 255 255)', // white
@@ -36,9 +36,15 @@ const inputBox = {
   iconColor: textPalette['500'],
 };
 
+const messageGroup: MessageGroupTheme = {
+  dateTimeColor: textPalette['400'],
+  textColor: textPalette['600'],
+};
+
 const dark: Theme = {
   button: button,
   inputBox: inputBox,
+  messageGroup: messageGroup,
 };
 
 export default dark;

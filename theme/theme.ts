@@ -4,6 +4,11 @@ type ButtonTheme = {
   textColor: string;
 };
 
+type MessageGroupTheme = {
+  dateTimeColor: string;
+  textColor: string;
+};
+
 type InputBoxTheme = {
   wrapperBackgroundColor: string;
   backgroundColor: string;
@@ -15,6 +20,7 @@ type InputBoxTheme = {
 type Theme = {
   button: ButtonTheme;
   inputBox: InputBoxTheme;
+  messageGroup: MessageGroupTheme;
 };
 
-export type { ButtonTheme, InputBoxTheme, Theme };
+export type { ButtonTheme, InputBoxTheme, MessageGroupTheme, Theme };

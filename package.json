@@ -7,15 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -p 6006 -s ./public",
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "dayjs": "^1.11.5",
-    "modern-normalize": "^1.1.0",
+    "date-fns": "^2.29.3",
     "next": "12.3.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "swr": "^1.3.0",
     "zod": "^3.19.1"
   },
   "devDependencies": {

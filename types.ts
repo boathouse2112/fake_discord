@@ -1,5 +1,4 @@
-import { Dayjs } from "dayjs";
-import { z } from "zod";
+import { z } from 'zod';
 
 // Represents a user
 export const UserSchema = z.object({
@@ -14,24 +13,22 @@ export type User = z.infer<typeof UserSchema>;
 // Message content types
 // Tagged union, can switch on `type` field.
 export const TextContentSchema = z.object({
-  type: z.literal("text"),
+  type: z.literal('text'),
   text: z.string(),
 });
 export type TextContent = z.infer<typeof TextContentSchema>;
 
-export const MessageContentSchema = z.discriminatedUnion("type", [
+export const MessageContentSchema = z.discriminatedUnion('type', [
   TextContentSchema,
-  z.object({ type: z.literal("none") }),
+  z.object({ type: z.literal('none') }),
 ]);
 export type MessageContent = z.infer<typeof MessageContentSchema>;
-
-const zDayjs: z.ZodType<Dayjs> = z.any(); // Let Zod accept a Dayjs object without defining it as a schema
 
 // Abstract message model type. Converted to message view props.
 export const MessageDataSchema = z.object({
   id: z.string(),
   authorId: z.string(),
-  time: zDayjs,
+  time: z.date(),
   content: MessageContentSchema,
 });
 export type MessageData = z.infer<typeof MessageDataSchema>;
