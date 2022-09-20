@@ -17,10 +17,21 @@ type InputBoxTheme = {
   iconColor: string;
 };
 
+type ServerListTheme = {
+  backgroundColor: string;
+};
+
 type Theme = {
   button: ButtonTheme;
   inputBox: InputBoxTheme;
   messageGroup: MessageGroupTheme;
+  serverList: ServerListTheme;
 };
 
-export type { ButtonTheme, InputBoxTheme, MessageGroupTheme, Theme };
+export type {
+  ButtonTheme,
+  InputBoxTheme,
+  MessageGroupTheme,
+  ServerListTheme,
+  Theme,
+};

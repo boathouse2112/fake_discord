@@ -1,4 +1,4 @@
-import { MessageGroupTheme, Theme } from './theme';
+import { MessageGroupTheme, ServerListTheme, Theme } from './theme';
 
 // I don't care if this doesn't follow the normal x00 color numbering scheme.
 
@@ -41,10 +41,15 @@ const messageGroup: MessageGroupTheme = {
   textColor: textPalette['600'],
 };
 
+const serverList: ServerListTheme = {
+  backgroundColor: backgroundPalette['100'],
+};
+
 const dark: Theme = {
   button: button,
   inputBox: inputBox,
   messageGroup: messageGroup,
+  serverList: serverList,
 };
 
 export default dark;
